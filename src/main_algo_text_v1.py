@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import pyaudio
+# import str
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
@@ -8,16 +9,17 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 r = sr.Recognizer()
 
 ### opens microphone and takes speech from human to convert to text
-mic = sr.Microphone(2)
-with mic as source:
-	r.adjust_for_ambient_noise(source)
-	audio = r.listen(source)
+#~ mic = sr.Microphone(2)
+#~ with mic as source:
+	#~ r.adjust_for_ambient_noise(source)
+	#~ audio = r.listen(source)
 
 try:
-	### parsing speech to text
-	spoken = r.recognize_google(audio)
-	print(spoken)
+	#~ ### parsing speech to text
+	#~ spoken = r.recognize_google(audio)
+	#~ print(spoken)
 	
+	spoken = input("Enter a phrase: ");
 	### use basic NLTK sentiment analysis algo Vader to assess speech
 	senti_analyzer = sid()
 	print (senti_analyzer.polarity_scores(spoken)['compound'])

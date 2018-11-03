@@ -28,13 +28,18 @@ def main():
 		#TODO: change this section to be more specific to perform more specific analysis
 		
 		#added sound output
-		lead_folder = "~/r2-voice_recognition/R2Sounds/"
-		if (senti_analyzer < 0):
-			play_sound(lead_folder + "R2Sad.wav")
-		elif (senti_analyzer > 0):
-			play_sound(lead_folder + "R2D2a.wav")
+		lead_folder = "/home/pi/r2-voice_recognition/R2FinalSounds/"
+		sounds = {"angry":"R2Angry.wav" , "good":"R2Good.wav" , "happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav"}
+		if (senti_analyzer < -0.5):
+			play_sound(lead_folder + sounds["angry"])
+		elif (senti_analyzer < 0):
+			play_sound(lead_folder + sounds["sad"])
+		elif (senti_analyzer == 0):
+			play_sound(lead_folder + sounds["neutral"])
+		elif (senti_analyzer > 0.5):
+			play_sound(lead_folder + sounds["happy"])
 		else:
-			play_sound(lead_folder + "R2D2.wav")
+			play_sound(lead_folder + sounds["good"])
 		
 		#TODO: change this section to be more specific to perform more specific analysis
 	
@@ -44,7 +49,7 @@ def main():
 	#TODO: save R2 sound effects to have it respond a certain way based on sentiment analysis
 
 def play_sound(file_name):
-	wave_obj = sa.WaveObject.from_wave_file("/home/pi/r2-voice_recognition/R2Sounds/R2D2.wav")
+	wave_obj = sa.WaveObject.from_wave_file(file_name)
 	play_obj = wave_obj.play()
 	play_obj.wait_done()
 
