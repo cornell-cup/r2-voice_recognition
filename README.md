@@ -8,13 +8,12 @@ It is right here (just in development, of course).
 PROJECT DEVELOPMENT: 
    1) Speech Recognition
 	
-
    2) Sentiment Analysis Algorithm
 
 
 
 SOURCES USED:
-https://www.seeedstudio.com/ReSpeaker-2-Mics-Pi-HAT-p-2874.html
+https://www.seeedstudio.com/ReSpeaker-2-Mics-Pi-HAT-p-2874.html - microphone used in creating the MVP
 https://github.com/respeaker/respeaker_python_library - used for speech-to-text implementation
 https://www.nltk.org/ - used for basic sentiment analysis
 
