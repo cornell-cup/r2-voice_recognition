@@ -3,32 +3,54 @@ import pyaudio
 import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
-                     
-                                         
-r = sr.Recognizer()
+from random import *
+import simpleaudio as sa                     
 
-### opens microphone and takes speech from human to convert to text
-mic = sr.Microphone(2)
-with mic as source:
-	r.adjust_for_ambient_noise(source)
-	audio = r.listen(source)
 
-try:
-	### parsing speech to text
-	spoken = r.recognize_google(audio)
-	print(spoken)
+def main():                              
+	r = sr.Recognizer()
 	
-	### use basic NLTK sentiment analysis algo Vader to assess speech
-	senti_analyzer = sid()
-	print (senti_analyzer.polarity_scores(spoken)['compound'])
-	#TODO: change this section to be more specific to perform more specific analysis
-    
-except sr.UnknownValueError:
-	print ("What are you saying?")
+	### opens microphone and takes speech from human to convert to text
+	mic = sr.Microphone(2)
+	with mic as source:
+		r.adjust_for_ambient_noise(source)
+		print("\n\n\nYou may begin talking:\n\n\n")
+		audio = r.listen(source)
 	
-#TODO: save R2 sound effects to have it respond a certain way based on sentiment analysis
+	try:
+		### parsing speech to text
+		spoken = r.recognize_google(audio)
+		print("The following text was said:\n\n" + spoken)
+		
+		### use basic NLTK sentiment analysis algo Vader to assess speech
+		senti_analyzer = sid().polarity_scores(spoken)['compound']
+		print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(senti_analyzer))
+		#TODO: change this section to be more specific to perform more specific analysis
+		
+		#added sound output
+		lead_folder = "~/r2-voice_recognition/R2Sounds/"
+		if (senti_analyzer < 0):
+			play_sound(lead_folder + "R2Sad.wav")
+		elif (senti_analyzer > 0):
+			play_sound(lead_folder + "R2D2a.wav")
+		else:
+			play_sound(lead_folder + "R2D2.wav")
+		
+		#TODO: change this section to be more specific to perform more specific analysis
+	
+	except sr.UnknownValueError:
+		print ("What are you saying?")
+	
+	#TODO: save R2 sound effects to have it respond a certain way based on sentiment analysis
+
+def play_sound(file_name):
+	wave_obj = sa.WaveObject.from_wave_file("/home/pi/r2-voice_recognition/R2Sounds/R2D2.wav")
+	play_obj = wave_obj.play()
+	play_obj.wait_done()
+
+
+main()
 
 
 
 
- 
