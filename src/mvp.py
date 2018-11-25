@@ -27,7 +27,7 @@ def main():
 		print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(senti_analyzer))
 		#TODO: change this section to be more specific to perform more specific analysis
 		
-		#added sound output
+	        ### sound output
 		lead_folder = "/home/pi/r2-voice_recognition/R2FinalSounds/"
 		sounds = {"angry":"R2Angry.wav" , "good":"R2Good.wav" , "happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav"}
 		if (senti_analyzer < -0.5):
@@ -40,14 +40,13 @@ def main():
 			play_sound(lead_folder + sounds["happy"])
 		else:
 			play_sound(lead_folder + sounds["good"])
-		
-		#TODO: change this section to be more specific to perform more specific analysis
-	
+	        
+                #TODO: change and add sounds for more sentiment (after new algorithm has been constructed)
+
 	except sr.UnknownValueError:
 		print ("What are you saying?")
-	
-	#TODO: save R2 sound effects to have it respond a certain way based on sentiment analysis
 
+### play sound from speakers
 def play_sound(file_name):
 	wave_obj = sa.WaveObject.from_wave_file(file_name)
 	play_obj = wave_obj.play()
