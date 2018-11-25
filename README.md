@@ -13,7 +13,7 @@ PROJECT DEVELOPMENT:
    sentence itself. For example, negation statements such as "not" are not interpreted correctly in statements that, when analyzed, seem
    negative but are actually positive.
 
-   2) Sentiment Analysis Algorithm
+   2) Sentiment Analysis Algorithm: to be implemented in Spring 2019 semester
 
 
 
