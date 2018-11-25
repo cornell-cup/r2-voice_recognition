@@ -18,7 +18,5 @@ PROJECT DEVELOPMENT:
 
 
 SOURCES USED:
-http://wiki.seeedstudio.com/ReSpeaker_Mic_Array_v2.0/- microphone used in creating the MVP
-https://github.com/respeaker/respeaker_python_library - used for speech-to-text implementation
-https://www.nltk.org/ - used for basic sentiment analysis
+http://wiki.seeedstudio.com/ReSpeaker_Mic_Array_v2.0/ : microphone used in creating the MVP --- https://github.com/respeaker/respeaker_python_library : used for speech-to-text implementation --- https://www.nltk.org/ : used for basic sentiment analysis
 
