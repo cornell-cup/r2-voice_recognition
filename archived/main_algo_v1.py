@@ -11,7 +11,7 @@ def main():
 	r = sr.Recognizer()
 	
 	### opens microphone and takes speech from human to convert to text
-	mic = sr.Microphone(2)
+	mic = sr.Microphone(0)
 	with mic as source:
 		r.adjust_for_ambient_noise(source)
 		print("\n\n\nYou may begin talking:\n\n\n")
