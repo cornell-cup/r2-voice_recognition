@@ -20,8 +20,10 @@ def main():
 	while (True):
 		spoken_text = listen(r, mic)
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
-		if (spoken_text.lower() == "wake up droid"):
+		if ("wake up droid" in spoken_text.lower()):
 			print ("awake")
+			file_object_correct = open("data-yes.csv", "a")
+			file_object_wrong = open("data-no.csv", "a")
 			react_with_sound(wakeup_final)
 			break
 	
@@ -29,21 +31,42 @@ def main():
 		spoken = listen (r, mic)
 		print("The following text was said:\n" + spoken + "\n")
 		
-		if (spoken.lower() == "sleep droid"):
+		if (spoken == ""):
+			print ("What?")
+			react_with_sound(no_clue_final)
+			
+		elif ("take attendance droid" in spoken.lower()):
+			print ("checking in - F.R.")
+			#TODO: link to check in function here
+			
+		elif ("sleep droid" in spoken.lower()):
 			print ("sleeping")
+			file_object_correct.close()
+			file_object_wrong.close()
 			react_with_sound(sleep_final)
 			break
-	
-		### use basic NLTK sentiment analysis algo Vader to assess speech
-		sentiment_value = sid().polarity_scores(spoken)['compound']
-		print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
-		#TODO: change this section to be more specific to perform more specific analysis
 			
-		### sound output
-		react_with_sound(sentiment_value)
-		
-				
-		#TODO: change and add sounds for more sentiment (after new algorithm has been constructed)
+		elif (spoken[:5].lower() == "droid"):
+			phrase = spoken[6:]
+			### use basic NLTK sentiment analysis algo Vader to assess speech
+			sentiment_value = sid().polarity_scores(phrase)['compound']
+			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
+			#TODO: change this section to be more specific to perform more specific analysis
+			
+			#write to file
+			print ("good? y or n")
+			answer = input()
+			if (answer == "y"):
+				file_object_correct.write (phrase + "," + str(sentiment_value) + "\n")
+			elif (answer == "n"):
+				file_object_wrong.write (phrase + "," + str(sentiment_value) + "\n")
+			
+			
+			### sound output
+			react_with_sound(sentiment_value)
+			
+					
+			#TODO: change and add sounds for more sentiment (after new algorithm has been constructed)
 		
 		
 """
@@ -62,7 +85,6 @@ def listen(r, mic):
 
 	except sr.UnknownValueError:
 		print ("What are you saying?") #testing
-		react_with_sound(no_clue_final)
 		return ""
 
 """
@@ -95,6 +117,7 @@ def play_sound(file_name):
 	wave_obj = sa.WaveObject.from_wave_file(file_name)
 	play_obj = wave_obj.play()
 	play_obj.wait_done()
+
 
 
 main()
