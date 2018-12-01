@@ -5,6 +5,7 @@ nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 from random import *
 import simpleaudio as sa
+import client
 
 no_clue_final = -999
 wakeup_final = -2
@@ -22,8 +23,8 @@ def main():
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
 		if ("wake up droid" in spoken_text.lower()):
 			print ("awake")
-			file_object_correct = open("data-yes.csv", "a")
-			file_object_wrong = open("data-no.csv", "a")
+			#file_object_correct = open("data-yes.csv", "a")
+			#file_object_wrong = open("data-no.csv", "a")
 			react_with_sound(wakeup_final)
 			break
 	
@@ -37,12 +38,13 @@ def main():
 			
 		elif ("take attendance droid" in spoken.lower()):
 			print ("checking in - F.R.")
+			client.main()
 			#TODO: link to check in function here
 			
 		elif ("sleep droid" in spoken.lower()):
 			print ("sleeping")
-			file_object_correct.close()
-			file_object_wrong.close()
+			#file_object_correct.close()
+			#file_object_wrong.close()
 			react_with_sound(sleep_final)
 			break
 			
@@ -53,6 +55,7 @@ def main():
 			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
 			#TODO: change this section to be more specific to perform more specific analysis
 			
+			"""
 			#write to file
 			print ("good? y or n")
 			answer = input()
@@ -60,7 +63,7 @@ def main():
 				file_object_correct.write (phrase + "," + str(sentiment_value) + "\n")
 			elif (answer == "n"):
 				file_object_wrong.write (phrase + "," + str(sentiment_value) + "\n")
-			
+			"""
 			
 			### sound output
 			react_with_sound(sentiment_value)
