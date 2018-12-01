@@ -4,15 +4,15 @@ import nltk
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 from random import *
-import simpleaudio as sa                     
+import simpleaudio as sa
 
 no_clue_final = -999
 wakeup_final = -2
 sleep_final = 2
 
-def main():                              
+def main():
 	r = sr.Recognizer()
-	
+
 	### opens microphone and takes speech from human to convert to text
 	mic = sr.Microphone(2)
 	
@@ -30,7 +30,7 @@ def main():
 		if (spoken.lower() == "sleep droid"):
 			react_with_sound(sleep_final)
 			break;
-			
+	
 		### use basic NLTK sentiment analysis algo Vader to assess speech
 		sentiment_value = sid().polarity_scores(spoken)['compound']
 		print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
@@ -56,6 +56,7 @@ def listen(r, mic):
 	
 	try:
 		return r.recognize_google(audio)
+
 	except sr.UnknownValueError:
 		print ("What are you saying?") #testing
 		react_with_sound(no_clue_final)
