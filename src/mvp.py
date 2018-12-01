@@ -19,17 +19,20 @@ def main():
 	### wake up call
 	while (True):
 		spoken_text = listen(r, mic)
+		print("The following startup phrase was said:\n" + spoken_text + "\n")
 		if (spoken_text.lower() == "wake up droid"):
+			print ("awake")
 			react_with_sound(wakeup_final)
 			break
 	
 	while (True):
 		spoken = listen (r, mic)
-		print("The following text was said:\n\n" + spoken)
+		print("The following text was said:\n" + spoken + "\n")
 		
 		if (spoken.lower() == "sleep droid"):
+			print ("sleeping")
 			react_with_sound(sleep_final)
-			break;
+			break
 	
 		### use basic NLTK sentiment analysis algo Vader to assess speech
 		sentiment_value = sid().polarity_scores(spoken)['compound']
@@ -68,7 +71,7 @@ based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
 	lead_folder = "/home/pi/r2-voice_recognition/R2FinalSounds/"
-	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , "happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", "sleep":"R2Sleep.wav", "no clue":"R2Clueless.wav"}
+	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , "happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", "sleep":"R2Sleep.wav", "no clue":"R2Confused.wav"}
 	
 	if (sentiment_value == no_clue_final):
 		play_sound(lead_folder + sounds["no clue"])
