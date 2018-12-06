@@ -5,11 +5,23 @@ nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 from random import *
 import simpleaudio as sa
-import client
+# import client
+import socket
+import json
+import time
 
 no_clue_final = -999
 wakeup_final = -2
 sleep_final = 2
+
+HOST = "192.168.4.201"
+PORT = 10000
+
+sendSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sendSocket.connect((HOST, PORT))
+
+data = {}
+data["r2"] = "-1"
 
 def main():
 	r = sr.Recognizer()
@@ -21,10 +33,11 @@ def main():
 	while (True):
 		spoken_text = listen(r, mic)
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
-		if ("wake up droid" in spoken_text.lower()):
+		if ("wakeupdroid" in simplify_text(spoken_text) or "wake-updroid" in simplify_text(spoken_text)):
 			print ("awake")
-			#file_object_correct = open("data-yes.csv", "a")
-			#file_object_wrong = open("data-no.csv", "a")
+			# file_object_correct = open("data-yes.csv", "a")
+			# file_object_wrong = open("data-no.csv", "a")
+			# file_object_r2 = open("r2sayings.txt", "a")
 			react_with_sound(wakeup_final)
 			break
 	
@@ -32,25 +45,46 @@ def main():
 		spoken = listen (r, mic)
 		print("The following text was said:\n" + spoken + "\n")
 		
+		# R2 unsure of input
 		if (spoken == ""):
 			print ("What?")
 			react_with_sound(no_clue_final)
-			
-		elif ("take attendance droid" in spoken.lower()):
-			print ("checking in - F.R.")
-			client.main()
-			#TODO: link to check in function here
-			
-		elif ("sleep droid" in spoken.lower()):
+		
+		# shut down R2
+		elif ("sleepdroid" in simplify_text(spoken)):
 			print ("sleeping")
-			#file_object_correct.close()
-			#file_object_wrong.close()
+			# file_object_correct.close()
+			# file_object_wrong.close()
 			react_with_sound(sleep_final)
 			break
+		
+		# have R2 take attendance
+		#elif ("takeattendancedroid" in simplify_text(spoken)):
+		#	print ("checking in - F.R.")
+		#	client.main()
 			
+		# moving R2
+		elif (spoken[:4].lower() == "move" or spoken[:4].lower() == "turn" and spoken[len(spoken)-len("droid"):] == "droid"):
+			spoken = simplify_text(spoken)
+			if (spoken.lower() == "moveforwarddroid"):
+				data["r2"] = "fwd"
+			elif (spoken.lower() == "movebackwarddroid"):
+				data["r2"] = "rvr"
+			elif (spoken.lower() == "moveleftdroid" or spoken.lower() == "turnleftdroid"):
+				data["r2"] = "left"
+			elif (spoken.lower() == "moverightdroid" or spoken.lower() == "turnrightdroid"):
+				data["r2"] = "right"
+			
+			sendSocket.sendall(json.dumps(data).encode())
+			#time.sleep(0.1)
+			#data["r2"] = "-1"
+			#sendSocket.sendall(json.dumps(data).encode())
+			
+		# R2 analyzing speech
 		elif (spoken[:5].lower() == "droid"):
-			phrase = spoken[6:]
+		 	#phrase = spoken[6:]
 			### use basic NLTK sentiment analysis algo Vader to assess speech
+			phrase = spoken
 			sentiment_value = sid().polarity_scores(phrase)['compound']
 			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
 			#TODO: change this section to be more specific to perform more specific analysis
@@ -96,7 +130,9 @@ based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
 	lead_folder = "/home/pi/r2-voice_recognition/R2FinalSounds/"
-	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , "happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", "sleep":"R2Sleep.wav", "no clue":"R2Confused.wav"}
+	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
+	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
+	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav"}
 	
 	if (sentiment_value == no_clue_final):
 		play_sound(lead_folder + sounds["no clue"])
@@ -121,10 +157,20 @@ def play_sound(file_name):
 	play_obj = wave_obj.play()
 	play_obj.wait_done()
 
-
+def simplify_text(speech_text):
+	text_list = speech_text.lower().split(' ')
+	new_speech_text = ""
+	for text in text_list:
+		new_speech_text += text
+	return new_speech_text
 
 main()
 
+""" WAYS "R2" IS INTERPRETED
+   - R2
+   - part 2
+   - how to
+"""	
 
 
 
