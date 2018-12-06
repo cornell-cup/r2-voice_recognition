@@ -13,6 +13,7 @@ import time
 no_clue_final = -999
 wakeup_final = -2
 sleep_final = 2
+move_final = 999
 
 HOST = "192.168.4.201"
 PORT = 10000
@@ -76,6 +77,7 @@ def main():
 				data["r2"] = "right"
 			
 			sendSocket.sendall(json.dumps(data).encode())
+			play_sound(move_final)
 			#time.sleep(0.1)
 			#data["r2"] = "-1"
 			#sendSocket.sendall(json.dumps(data).encode())
@@ -132,7 +134,7 @@ def react_with_sound (sentiment_value):
 	lead_folder = "/home/pi/r2-voice_recognition/R2FinalSounds/"
 	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
-	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav"}
+	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav"}
 	
 	if (sentiment_value == no_clue_final):
 		play_sound(lead_folder + sounds["no clue"])
@@ -140,6 +142,8 @@ def react_with_sound (sentiment_value):
 		play_sound(lead_folder + sounds["wake up"])
 	elif (sentiment_value == sleep_final):
 		play_sound(lead_folder + sounds["sleep"])
+	elif (sentiment_value == move_final)
+		play_sound(lead_folder + sounds["move"])
 	elif (sentiment_value < -0.5):
 		play_sound(lead_folder + sounds["angry"])
 	elif (sentiment_value < 0):
