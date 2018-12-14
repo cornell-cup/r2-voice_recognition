@@ -5,15 +5,17 @@ nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 from random import *
 import simpleaudio as sa
-# import client
+import client
 import socket
 import json
 import time
+from threading import Thread
 
 no_clue_final = -999
 wakeup_final = -2
 sleep_final = 2
 move_final = 999
+attendance_final = 3
 
 HOST = "192.168.4.201"
 PORT = 10000
@@ -21,8 +23,21 @@ PORT = 10000
 sendSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sendSocket.connect((HOST, PORT))
 
-data = {}
-data["r2"] = "-1"
+data = "-2"
+# data["r2"] = "-1"
+
+class ListenThread(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+
+    def run(self):
+        while True:
+            global data
+            sendSocket.send(data.encode())
+            time.sleep(0.1)
+            
+thread = ListenThread()
+thread.start()
 
 def main():
 	r = sr.Recognizer()
@@ -60,24 +75,31 @@ def main():
 			break
 		
 		# have R2 take attendance
-		#elif ("takeattendancedroid" in simplify_text(spoken)):
-		#	print ("checking in - F.R.")
-		#	client.main()
+		elif ("takeattendancedroid" in simplify_text(spoken)):
+			print ("checking in - F.R.")
+			react_with_sound(attendance_final)
+			client.main()
 			
 		# moving R2
-		elif (spoken[:4].lower() == "move" or spoken[:4].lower() == "turn" and spoken[len(spoken)-len("droid"):] == "droid"):
+		elif (("move" in simplify_text(spoken) or "turn" in simplify_text(spoken)) and "droid" in simplify_text(spoken)):
 			spoken = simplify_text(spoken)
-			if (spoken.lower() == "moveforwarddroid"):
-				data["r2"] = "fwd"
-			elif (spoken.lower() == "movebackwarddroid"):
-				data["r2"] = "rvr"
+			global data
+			if (spoken.lower() == "moveforwarddroid" or spoken.lower() == "moveforwardsdroid"):
+				data = "1"
+				#data["r2"] = "fwd"
+			elif (spoken.lower() == "movebackwarddroid" or spoken.lower() == "movebackwardsdroid"):
+				data = "2"
+				#data["r2"] = "rvr"
 			elif (spoken.lower() == "moveleftdroid" or spoken.lower() == "turnleftdroid"):
-				data["r2"] = "left"
+				data = "3"
+				#data["r2"] = "left"
 			elif (spoken.lower() == "moverightdroid" or spoken.lower() == "turnrightdroid"):
-				data["r2"] = "right"
+				data = "4"
+				#data["r2"] = "right"
 			
-			sendSocket.sendall(json.dumps(data).encode())
-			play_sound(move_final)
+			print(data)
+			react_with_sound(move_final)
+			
 			#time.sleep(0.1)
 			#data["r2"] = "-1"
 			#sendSocket.sendall(json.dumps(data).encode())
@@ -91,19 +113,17 @@ def main():
 			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
 			#TODO: change this section to be more specific to perform more specific analysis
 			
-			"""
+			
 			#write to file
-			print ("good? y or n")
-			answer = input()
-			if (answer == "y"):
-				file_object_correct.write (phrase + "," + str(sentiment_value) + "\n")
-			elif (answer == "n"):
-				file_object_wrong.write (phrase + "," + str(sentiment_value) + "\n")
-			"""
+			#print ("good? y or n")
+			#answer = input()
+			#if (answer == "y"):
+			#	file_object_correct.write (phrase + "," + str(sentiment_value) + "\n")
+			#elif (answer == "n"):
+			#	file_object_wrong.write (phrase + "," + str(sentiment_value) + "\n")
 			
 			### sound output
 			react_with_sound(sentiment_value)
-			
 					
 			#TODO: change and add sounds for more sentiment (after new algorithm has been constructed)
 		
@@ -134,7 +154,8 @@ def react_with_sound (sentiment_value):
 	lead_folder = "/home/pi/r2-voice_recognition/R2FinalSounds/"
 	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
-	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav"}
+	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
+	"attendance":"R2Attendance.wav"}
 	
 	if (sentiment_value == no_clue_final):
 		play_sound(lead_folder + sounds["no clue"])
@@ -142,8 +163,10 @@ def react_with_sound (sentiment_value):
 		play_sound(lead_folder + sounds["wake up"])
 	elif (sentiment_value == sleep_final):
 		play_sound(lead_folder + sounds["sleep"])
-	elif (sentiment_value == move_final)
+	elif (sentiment_value == move_final):
 		play_sound(lead_folder + sounds["move"])
+	elif (sentiment_value == attendance_final):
+		play_sound(lead_folder + sounds["attendance"])
 	elif (sentiment_value < -0.5):
 		play_sound(lead_folder + sounds["angry"])
 	elif (sentiment_value < 0):

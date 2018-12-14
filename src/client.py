@@ -21,7 +21,7 @@ import sys
 import os
 
 
-url = "http://10.129.3.148:11000/identify-face"
+url = "http://10.129.5.115:11000/identify-face"
 
 def send_test_image():
     files = {
