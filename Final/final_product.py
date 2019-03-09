@@ -150,7 +150,6 @@ def simplify_text(speech_text):
 			new_speech_text += text
 	return new_speech_text
 
-		
 # move R2
 def moveR2 (spoken):
 	global data
