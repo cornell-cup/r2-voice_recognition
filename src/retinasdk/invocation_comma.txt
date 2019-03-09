@@ -1,0 +1,32 @@
+take a selfie,selfie;
+take a picture,picture;
+smile,smile;
+say cheese,cheese;
+hand out stickers,stickers;hand;
+give out stickers,stickers;
+get some stickers,stickers;
+give me a high five,high five;
+up top,top;
+high five,high five;
+give me a bottle of water,bottle;
+get me a bottle of water,bottle;water;
+hand me a bottle of water,bottle;hand;
+hit me up with a bottle of water,hit;bottle;
+get me a sticker,sticker;
+get some stickers,stickers;
+give me a sticker,sticker;
+give me some stickers,stickers;
+hand me some stickers,stickers;hand;
+play a game,play;game;
+play rock paper scissors,play;rock paper scissors;
+I challenge you to rock paper scissors,rock;scissors;paper;challenge;
+play the high low game,play;game;
+play Guess the Number,play;guess;number;
+play the numbers game,play;numbers game;
+hello,hello;
+hi,hi;
+how are you,how;you;
+what's up,
+how's it going,
+hey,hey;
+stop,stop;

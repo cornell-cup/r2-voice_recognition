@@ -1,41 +1,32 @@
-wave, wave, 
-say hello, hello, 
-high five, 
-hand up, hand, 
-shake my hand, shake, hand, 
-play music, play, music, 
-play rock paper scissors, play, rock paper scissors, 
-play chess, chess, play, 
-give me a water bottle, bottle, 
-give me a bottle, bottle, 
-give me a tag, tag, 
-hand me a tag, tag, hand, 
-hand me a water bottle, bottle, hand, 
-hand me a bottle, bottle, hand, 
-greet people, people, 
-stop, stop, 
-i challenge you to a game of rock paper scissors, challenge, rock paper scissors, 
-let's play a game, play, game, 
-play rock paper scissors with me, play, rock paper scissors, 
-play rock paper scissors, play, rock paper scissors, 
-give me a high five, high five, 
-Thank you R2, 
-goodbye R2, goodbye, 
-good bye r2, bye, 
-stop, stop, 
-follow me , 
-follow, 
-come with me, 
-come over here, 
-walk with me, walk, 
-go away, 
-leave, 
-exit, exit, 
-open this door, door, 
-pull this door, door, pull, 
-push this door, door, push, 
-pull this door open, door, pull, 
-push this door open, door, push, 
-pull this door closed, door, pull, 
-shut this door, door, 
-close this door, door, 
+take a selfie;selfie;
+take a picture;picture;
+smile;smile;
+say cheese;cheese;
+hand out stickers;stickers;hand;
+give out stickers;stickers;
+get some stickers;stickers;
+give me a high five;high five;
+up top;top;
+high five;high five;
+give me a bottle of water;bottle;
+get me a bottle of water;bottle;water;
+hand me a bottle of water;bottle;hand;
+hit me up with a bottle of water;hit;bottle;
+get me a sticker;sticker;
+get some stickers;stickers;
+give me a sticker;sticker;
+give me some stickers;stickers;
+hand me some stickers;stickers;hand;
+play a game;play;game;
+play rock paper scissors;play;rock paper scissors;
+I challenge you to rock paper scissors;rock;scissors;paper;challenge;
+play the high low game;play;game;
+play Guess the Number;play;guess;number;
+play the numbers game;play;numbers game;
+hello;hello;
+hi;hi;
+how are you;how;you;
+what's up;
+how's it going;
+hey;hey;
+stop;stop;
