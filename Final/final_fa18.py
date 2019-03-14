@@ -8,7 +8,7 @@ File Created by Yanchen Zhan '22 (yz366)
 
 
 # import respective packages
-import speech_recognition as sr
+import SpeechRecognition as sr
 import pyaudio
 import nltk
 nltk.download('vader_lexicon')
@@ -20,6 +20,8 @@ import socket
 import json
 import time
 from threading import Thread
+from pixels import pixels
+from voice_engine.doa_speaker_4mic_array.py import DOA
 
 # connect RaspberryPi to Arduino on R2 for voice-based movement
 HOST = "192.168.4.201"
@@ -74,7 +76,7 @@ def main():
 			break
 		
 		# moving R2
-        elif (("move" in spoken or "turn" in spoken) and "droid" in spoken):
+	        elif (("move" in spoken or "turn" in spoken) and "droid" in spoken):
 			moveR2(spoken)
 		
 		# have R2 take attendance
