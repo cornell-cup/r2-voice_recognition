@@ -41,3 +41,8 @@ Tell me about Cornell Cup;cup;cornell;
 Tell me about this competition;competition;
 What is Cornell Cup?;cup;cornell;
 give me information about Cornell Cup;cup;cornell;
+greet people;people;
+say hi to people;hi;people;
+say hi to bob;bob;hi;
+play a game;play;game;
+stop;stop;

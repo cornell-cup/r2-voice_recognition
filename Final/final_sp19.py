@@ -20,6 +20,9 @@ import json
 import time
 from threading import Thread
 
+import retinasdk
+apiKey = "ac486a40-3220-11e9-bb65-69ed2d3c7927"
+liteClient = retinasdk.LiteClient(apiKey)
 
 ### opens microphone instance that takes speech from human to convert to text
 	r = sr.Recognizer()
@@ -27,41 +30,74 @@ from threading import Thread
 
 	# tells R2 to wake up
 	while (True):
-		spoken_text = listen(r, mic)
+		spoken_text = input("enter text here: ")
+		#spoken_text = listen(r, mic)
+		#spoken_text = spoken_text.lower()
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
 		
-		if ("Hey R2" in spoken_text):
+		if ("r2 stop" == spoken_text):
+			print ("emergency invoked")
+			play_sound(sleep_final)
+			exit
+		
+		if ("hey r2" in spoken_text):
 			print ("awake")
 			react_with_sound(wakeup_final)
 			break
+			
 	
 	# R2 waits to hear what user wants - CHANGE PROMPTS HERE
 	while (True):
-		spoken = simplify_text(listen (r, mic))
+		spoken = input("enter text here 2: ")
+		#spoken = simplify_text(listen (r, mic))
+		#spoken = spoken.lower()
 		print("The following text was said:\n" + spoken + "\n")
-
+		
 		# R2 unsure of input
 		if (spoken == ""):
 			print ("What?")
 			react_with_sound(no_clue_final)
 		
-		# shut down R2
-		elif ("sleepdroid" in spoken):
-			print ("sleeping")
-			react_with_sound(sleep_final)
-			break
+		#sentiment analysis
+		if ("can you hear me now" in spoken):
+			#run sentiment analysis here
 		
-		# moving R2
-        elif (("move" in spoken or "turn" in spoken) and "droid" in spoken):
-			moveR2(spoken)
+		#sets up array of key words parsed from words spoken
+		keywords = liteClient.getKeywords(spoken)
 		
-		# have R2 take attendance
-		elif ("takeattendancedroid" in spoken):
-			take_attendance()
+		if ("high five" in spoken):
+			keywords.append("high five")
 		
-		# have R2 react to user speech
+		fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
+		fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
 		
+		fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
+		fndictGetItemsKey = {"water", "bottle", "stickers"}
+		
+		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
 
+		
+		for x in range(0, len(keywords)):
+			print (keywords[x])
+			
+			if (fndictGreetingsKey.contains(keywords[x])):
+				fndctGreetings(keywords[x])
+		
+			elif (fndictGetItemsKey.contains(keywords[x])):
+				fndictGetItems(keywords[x])
+			
+		#tell R2 to give information about Cornell Cup
+		elif ("competition" in keywords):
+			spit_info()
+		
+		#tell R2 to open Periscope
+		elif ("periscope" in keywords):
+			open_periscope()
+		
+		#tell R2 to play a game
+		elif ("rock paper scissors" in keywords or "game" in keywords):
+			game("rock paper scissors")
+		
 """
 listen to user statement in mic
 returns spoken words from user OR 
@@ -119,39 +155,12 @@ def play_sound(file_name):
 	play_obj = wave_obj.play()
 	play_obj.wait_done()
 
-# move R2
-def moveR2 (spoken):
-	global data
-	
-	# moving R2 forward
-	if (spoken.lower() == "moveforwarddroid" or spoken.lower() == "moveforwardsdroid"):
-			data = "1"
-			#data["r2"] = "fwd"
-			
-	# moving R2 backward
-	elif (spoken.lower() == "movebackwarddroid" or spoken.lower() == "movebackwardsdroid"):
-			data = "2"
-			#data["r2"] = "rvr"
-			
-	# turning R2 90deg counterclockwise
-	elif (spoken.lower() == "moveleftdroid" or spoken.lower() == "turnleftdroid"):
-			data = "3"
-			#data["r2"] = "left"
-	
-	# turning R2 90deg clockwise
-	elif (spoken.lower() == "moverightdroid" or spoken.lower() == "turnrightdroid"):
-			data = "4"
-			#data["r2"] = "right"
-
-	print(data)
-	react_with_sound(move_final)
-
-
 # have R2 take attendance
 def take_attendance():
 	print ("checking in - F.R.")
 	react_with_sound(attendance_final)
 	client.main()	
+
 
 
 main()
