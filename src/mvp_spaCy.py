@@ -5,7 +5,6 @@ nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 from random import *
 import simpleaudio as sa
-import client
 import socket
 import json
 import time
@@ -35,7 +34,7 @@ class ListenThread(Thread):
             global data
             sendSocket.send(data.encode())
             time.sleep(0.1)
-            
+
 thread = ListenThread()
 thread.start()
 
@@ -44,7 +43,7 @@ def main():
 
 	### opens microphone and takes speech from human to convert to text
 	mic = sr.Microphone(2)
-	
+
 	### wake up call
 	while (True):
 		spoken_text = listen(r, mic)
@@ -56,16 +55,16 @@ def main():
 			# file_object_r2 = open("r2sayings.txt", "a")
 			react_with_sound(wakeup_final)
 			break
-	
+
 	while (True):
 		spoken = listen (r, mic)
 		print("The following text was said:\n" + spoken + "\n")
-		
+
 		# R2 unsure of input
 		if (spoken == ""):
 			print ("What?")
 			react_with_sound(no_clue_final)
-		
+
 		# shut down R2
 		elif ("sleepdroid" in simplify_text(spoken)):
 			print ("sleeping")
@@ -73,13 +72,13 @@ def main():
 			# file_object_wrong.close()
 			react_with_sound(sleep_final)
 			break
-		
+
 		# have R2 take attendance
 		elif ("takeattendancedroid" in simplify_text(spoken)):
 			print ("checking in - F.R.")
 			react_with_sound(attendance_final)
-			client.main()
-			
+
+
 		# moving R2
 		elif (("move" in simplify_text(spoken) or "turn" in simplify_text(spoken)) and "droid" in simplify_text(spoken)):
 			spoken = simplify_text(spoken)
@@ -96,14 +95,14 @@ def main():
 			elif (spoken.lower() == "moverightdroid" or spoken.lower() == "turnrightdroid"):
 				data = "4"
 				#data["r2"] = "right"
-			
+
 			print(data)
 			react_with_sound(move_final)
-			
+
 			#time.sleep(0.1)
 			#data["r2"] = "-1"
 			#sendSocket.sendall(json.dumps(data).encode())
-			
+
 		# R2 analyzing speech
 		elif (spoken[:5].lower() == "droid"):
 		 	#phrase = spoken[6:]
@@ -112,8 +111,8 @@ def main():
 			sentiment_value = sid().polarity_scores(phrase)['compound']
 			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
 			#TODO: change this section to be more specific to perform more specific analysis
-			
-			
+
+
 			#write to file
 			#print ("good? y or n")
 			#answer = input()
@@ -121,16 +120,16 @@ def main():
 			#	file_object_correct.write (phrase + "," + str(sentiment_value) + "\n")
 			#elif (answer == "n"):
 			#	file_object_wrong.write (phrase + "," + str(sentiment_value) + "\n")
-			
+
 			### sound output
 			react_with_sound(sentiment_value)
-					
+
 			#TODO: change and add sounds for more sentiment (after new algorithm has been constructed)
-		
-		
+
+
 """
 listen to user statement in mic
-returns spoken words from user OR 
+returns spoken words from user OR
 returns empty string if source not detected
 """
 def listen(r, mic):
@@ -138,7 +137,7 @@ def listen(r, mic):
 		r.adjust_for_ambient_noise(source)
 		print("\n\n\nYou may begin talking:\n\n\n") #testing
 		audio = r.listen(source)
-	
+
 	try:
 		return r.recognize_google(audio)
 
@@ -156,7 +155,7 @@ def react_with_sound (sentiment_value):
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
 	"attendance":"R2Attendance.wav"}
-	
+
 	if (sentiment_value == no_clue_final):
 		play_sound(lead_folder + sounds["no clue"])
 	elif (sentiment_value == wakeup_final):
@@ -197,7 +196,4 @@ main()
    - R2
    - part 2
    - how to
-"""	
-
-
-
+"""
