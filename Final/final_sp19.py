@@ -73,6 +73,7 @@ def main():
 		#sentiment analysis
 		if ("can you hear me now" in spoken):
 			print ("yes i can hear you")
+			break
 			#run sentiment analysis here
 		
 		#sets up array of key words parsed from words spoken
