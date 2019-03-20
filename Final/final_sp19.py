@@ -100,10 +100,11 @@ def main():
 			if (fndictGetItemsKey.contains(keywords[x])):
 				fndictGetItems(keywords[x])
 				break
-			
+		
+		"""	
 		#tell R2 to give information about Cornell Cup
-		#if ("competition" in keywords):
-		#	spit_info()
+		if ("competition" in keywords):
+			spit_info()
 				
 		#tell R2 to open Periscope
 		elif ("periscope" in keywords):
@@ -112,6 +113,7 @@ def main():
 		#tell R2 to play a game
 		elif ("rock paper scissors" in keywords or "game" in keywords):
 			game("rock paper scissors")
+		"""
 		
 """
 listen to user statement in mic
