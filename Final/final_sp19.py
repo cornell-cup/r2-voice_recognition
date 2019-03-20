@@ -7,26 +7,33 @@ File Created by Yanchen Zhan '22 (yz366)
 """
 
 # import respective packages
-import speech_recognition as sr
-import pyaudio
-import nltk
-nltk.download('vader_lexicon')
-from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
-from random import *
+#import speech_recognition as sr
+#import pyaudio
+#import nltk
+#nltk.download('vader_lexicon')
+#from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
+#from random import *
 import simpleaudio as sa
-import client
-import socket
-import json
-import time
-from threading import Thread
+#import client
+#import socket
+#import json
+#import time
+#from threading import Thread
 
 import retinasdk
 apiKey = "ac486a40-3220-11e9-bb65-69ed2d3c7927"
 liteClient = retinasdk.LiteClient(apiKey)
 
+no_clue_final = 999
+wakeup_final = 998
+sleep_final = 997
+move_final = 996
+attendance_final = 995
+
+def main():
 ### opens microphone instance that takes speech from human to convert to text
-	r = sr.Recognizer()
-	mic = sr.Microphone(2)
+	#r = sr.Recognizer()
+	#mic = sr.Microphone(2)
 
 	# tells R2 to wake up
 	while (True):
@@ -35,7 +42,7 @@ liteClient = retinasdk.LiteClient(apiKey)
 		#spoken_text = spoken_text.lower()
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
 		
-		if ("r2 stop" == spoken_text):
+		if ("r2 stop" in spoken_text):
 			print ("emergency invoked")
 			play_sound(sleep_final)
 			exit
@@ -53,6 +60,11 @@ liteClient = retinasdk.LiteClient(apiKey)
 		#spoken = spoken.lower()
 		print("The following text was said:\n" + spoken + "\n")
 		
+		if ("r2 stop" in spoken_text):
+			print ("emergency invoked")
+			play_sound(sleep_final)
+			exit
+		
 		# R2 unsure of input
 		if (spoken == ""):
 			print ("What?")
@@ -60,6 +72,7 @@ liteClient = retinasdk.LiteClient(apiKey)
 		
 		#sentiment analysis
 		if ("can you hear me now" in spoken):
+			print ("yes i can hear you")
 			#run sentiment analysis here
 		
 		#sets up array of key words parsed from words spoken
@@ -82,12 +95,14 @@ liteClient = retinasdk.LiteClient(apiKey)
 			
 			if (fndictGreetingsKey.contains(keywords[x])):
 				fndctGreetings(keywords[x])
+				break
 		
-			elif (fndictGetItemsKey.contains(keywords[x])):
+			if (fndictGetItemsKey.contains(keywords[x])):
 				fndictGetItems(keywords[x])
+				break
 			
 		#tell R2 to give information about Cornell Cup
-		elif ("competition" in keywords):
+		if ("competition" in keywords):
 			spit_info()
 		
 		#tell R2 to open Periscope
@@ -122,7 +137,7 @@ plays respective sound from speakers
 based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
-	lead_folder = "/home/pi/r2-voice_recognition/Final/R2FinalSounds/"
+	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
 	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
