@@ -9,7 +9,6 @@ import client
 import socket
 import json
 import time
-import json
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 \
     import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
@@ -117,16 +116,17 @@ def main():
 		 	#phrase = spoken[6:]
 			### use basic NLTK sentiment analysis algo Vader to assess speech
 			phrase = spoken
-	response = naturalLanguageUnderstanding.analyze(
-    	text=phrase,
-    	features=Features(
+
+			response = naturalLanguageUnderstanding.analyze(
+    	    text=phrase,
+    	    features=Features(
         	sentiment=SentimentOptions(document=None, targets=None))).get_result()
         
-parsed_json = json.loads(json.dumps(response, indent=2))
-sentiment = parsed_json['sentiment']
-document = sentiment['document']
-score = document['score']
-sentiment_value = float(score)
+			parsed_json = json.loads(json.dumps(response, indent=2))
+			sentiment = parsed_json['sentiment']
+			document = sentiment['document']
+			score = document['score']
+			sentiment_value = float(score)
 #print(sentiment_value)
 			#sentiment_value = sid().polarity_scores(phrase)['compound']
 			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
