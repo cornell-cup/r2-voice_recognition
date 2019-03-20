@@ -43,7 +43,7 @@ class ListenThread(Thread):
             global data
             sendSocket.send(data.encode())
             time.sleep(0.1)
-            
+
 thread = ListenThread()
 thread.start()
 """
@@ -53,7 +53,7 @@ def main():
 
 	### opens microphone and takes speech from human to convert to text
 	mic = sr.Microphone(2)
-	
+
 	### wake up call
 	while (True):
 		spoken_text = listen(r, mic)
@@ -65,16 +65,16 @@ def main():
 			# file_object_r2 = open("r2sayings.txt", "a")
 			react_with_sound(wakeup_final)
 			break
-	
+
 	while (True):
 		spoken = listen (r, mic)
 		print("The following text was said:\n" + spoken + "\n")
-		
+
 		# R2 unsure of input
 		if (spoken == ""):
 			print ("What?")
 			react_with_sound(no_clue_final)
-		
+
 		# shut down R2
 		elif ("sleepdroid" in simplify_text(spoken)):
 			print ("sleeping")
@@ -82,13 +82,38 @@ def main():
 			# file_object_wrong.close()
 			react_with_sound(sleep_final)
 			break
-		
+
 		# have R2 take attendance
 		elif ("takeattendancedroid" in simplify_text(spoken)):
 			print ("checking in - F.R.")
 			react_with_sound(attendance_final)
 			client.main()
-"""			
+
+		# R2 analyzing speech
+		elif (spoken[:5].lower() == "droid"):
+		 	#phrase = spoken[6:]
+			### use basic NLTK sentiment analysis algo Vader to assess speech
+			phrase = spoken
+
+			response = naturalLanguageUnderstanding.analyze(
+	          	text=phrase,
+			    features=Features(
+		        sentiment=SentimentOptions(document=None, targets=None))).get_result()
+
+			parsed_json = json.loads(json.dumps(response, indent=2))
+			sentiment = parsed_json['sentiment']
+			document = sentiment['document']
+			score = document['score']
+			sentiment_value = float(score)
+#print(sentiment_value)
+			#sentiment_value = sid().polarity_scores(phrase)['compound']
+			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
+			#TODO: change this section to be more specific to perform more specific analysis
+	
+		### sound output
+	#	react_with_sound(sentiment_value)
+			
+		""" 
 		# moving R2
 		elif (("move" in simplify_text(spoken) or "turn" in simplify_text(spoken)) and "droid" in simplify_text(spoken)):
 			spoken = simplify_text(spoken)
@@ -112,29 +137,8 @@ def main():
 			#time.sleep(0.1)
 			#data["r2"] = "-1"
 			#sendSocket.sendall(json.dumps(data).encode())
-"""			
-		# R2 analyzing speech
-		elif (spoken[:5].lower() == "droid"):
-		 	#phrase = spoken[6:]
-			### use basic NLTK sentiment analysis algo Vader to assess speech
-			phrase = spoken
+"""
 
-			response = naturalLanguageUnderstanding.analyze(
-    	    text=phrase,
-    	    features=Features(
-        	sentiment=SentimentOptions(document=None, targets=None))).get_result()
-        
-			parsed_json = json.loads(json.dumps(response, indent=2))
-			sentiment = parsed_json['sentiment']
-			document = sentiment['document']
-			score = document['score']
-			sentiment_value = float(score)
-#print(sentiment_value)
-			#sentiment_value = sid().polarity_scores(phrase)['compound']
-			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
-			#TODO: change this section to be more specific to perform more specific analysis
-			
-			
 			#write to file
 			#print ("good? y or n")
 			#answer = input()
@@ -143,8 +147,7 @@ def main():
 			#elif (answer == "n"):
 			#	file_object_wrong.write (phrase + "," + str(sentiment_value) + "\n")
 			
-			### sound output
-			react_with_sound(sentiment_value)
+
 					
 			#TODO: change and add sounds for more sentiment (after new algorithm has been constructed)
 		
