@@ -102,9 +102,9 @@ def main():
 				break
 			
 		#tell R2 to give information about Cornell Cup
-		if ("competition" in keywords):
-			spit_info()
-		
+		#if ("competition" in keywords):
+		#	spit_info()
+				
 		#tell R2 to open Periscope
 		elif ("periscope" in keywords):
 			open_periscope()
@@ -176,6 +176,15 @@ def take_attendance():
 	react_with_sound(attendance_final)
 	client.main()	
 
+def wave():
+	print ("waving")
+	
+def greet():
+	print ("greeting, don't forget to wave")
+
+def grab_item(item):
+	print ("grabbing" + item)
+	
 
 
 main()

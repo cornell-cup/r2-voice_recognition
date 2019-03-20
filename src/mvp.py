@@ -5,14 +5,14 @@ nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 from random import *
 import simpleaudio as sa
-import client
-import socket
+#import client
+#import socket
 import json
 import time
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 \
     import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
-from threading import Thread
+#from threading import Thread
 
 naturalLanguageUnderstanding = NaturalLanguageUnderstandingV1(
     version='2018-11-16',
@@ -24,15 +24,16 @@ sleep_final = 2
 move_final = 999
 attendance_final = 3
 
-HOST = "192.168.4.201"
-PORT = 10000
+#HOST = "192.168.4.201"
+#PORT = 10000
 
-sendSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sendSocket.connect((HOST, PORT))
+#sendSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#sendSocket.connect((HOST, PORT))
 
-data = "-2"
+#data = "-2"
 # data["r2"] = "-1"
 
+"""
 class ListenThread(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -45,6 +46,7 @@ class ListenThread(Thread):
             
 thread = ListenThread()
 thread.start()
+"""
 
 def main():
 	r = sr.Recognizer()
@@ -86,7 +88,7 @@ def main():
 			print ("checking in - F.R.")
 			react_with_sound(attendance_final)
 			client.main()
-			
+"""			
 		# moving R2
 		elif (("move" in simplify_text(spoken) or "turn" in simplify_text(spoken)) and "droid" in simplify_text(spoken)):
 			spoken = simplify_text(spoken)
@@ -110,7 +112,7 @@ def main():
 			#time.sleep(0.1)
 			#data["r2"] = "-1"
 			#sendSocket.sendall(json.dumps(data).encode())
-			
+"""			
 		# R2 analyzing speech
 		elif (spoken[:5].lower() == "droid"):
 		 	#phrase = spoken[6:]
