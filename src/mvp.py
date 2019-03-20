@@ -91,9 +91,9 @@ def main():
 
 		# R2 analyzing speech
 		elif (spoken[:5].lower() == "droid"):
-		 	#phrase = spoken[6:]
+		 	phrase = spoken[6:]
 			### use basic NLTK sentiment analysis algo Vader to assess speech
-			phrase = spoken
+			#phrase = spoken
 
 			response = naturalLanguageUnderstanding.analyze(
 	          	text=phrase,
@@ -105,7 +105,7 @@ def main():
 			document = sentiment['document']
 			score = document['score']
 			sentiment_value = float(score)
-#print(sentiment_value)
+			#print(sentiment_value)
 			#sentiment_value = sid().polarity_scores(phrase)['compound']
 			print ("On a -1 to 1 scale (< 0 is negative, > 0 is positive, = 0 is neutral), the text is: " + str(sentiment_value))
 			#TODO: change this section to be more specific to perform more specific analysis
