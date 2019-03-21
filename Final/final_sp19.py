@@ -44,7 +44,7 @@ def main():
 		
 		if ("r2 stop" in spoken_text):
 			print ("emergency invoked")
-			play_sound(sleep_final)
+			react_with_sound(sleep_final)
 			exit
 		
 		if ("hey r2" in spoken_text):
@@ -101,12 +101,10 @@ def main():
 			
 			if (word in fndictGreetingsKeys):
 				fndictGreetings.get(word)
-				exit
 				break
 		
 			elif (word in fndictGetItemsKeys):
 				fndictGetItems.get(word)
-				exit
 				break
 		
 		"""	
