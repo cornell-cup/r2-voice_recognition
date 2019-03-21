@@ -14,11 +14,19 @@ File Created by Yanchen Zhan '22 (yz366)
 #from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 #from random import *
 import simpleaudio as sa
+import json
 #import client
 #import socket
 #import json
 #import time
 #from threading import Thread
+from watson_developer_cloud import NaturalLanguageUnderstandingV1
+from watson_developer_cloud.natural_language_understanding_v1 \
+    import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
+
+naturalLanguageUnderstanding = NaturalLanguageUnderstandingV1(
+version='2018-11-16',
+iam_apikey='ZpNv1kcHqUvvzupBoxNRa-PvNKf-vbLnL6QLjBZTvHmr')
 
 import retinasdk
 apiKey = "ac486a40-3220-11e9-bb65-69ed2d3c7927"
@@ -75,7 +83,17 @@ def main():
 			print ("yes i can hear you")
 			break
 			#run sentiment analysis here
-		
+			response = naturalLanguageUnderstanding.analyze(
+	          	text=spoken,
+			    features=Features(
+		        sentiment=SentimentOptions(document=None, targets=None))).get_result()
+
+			parsed_json = json.loads(json.dumps(response, indent=2))
+			sentiment = parsed_json['sentiment']
+			document = sentiment['document']
+			score = document['score']
+			sentiment_value = float(score)
+
 		#sets up array of key words parsed from words spoken
 		keywords = liteClient.getKeywords(spoken)
 			 
@@ -145,7 +163,7 @@ plays respective sound from speakers
 based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
-	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
+	lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
 	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
