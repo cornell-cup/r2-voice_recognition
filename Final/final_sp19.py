@@ -81,7 +81,7 @@ def main():
 		#sentiment analysis
 		elif ("can you hear me now" in spoken):
 			print ("yes i can hear you")
-			break
+			
 			#run sentiment analysis here
 			response = naturalLanguageUnderstanding.analyze(
 	          	text=spoken,
@@ -93,6 +93,8 @@ def main():
 			document = sentiment['document']
 			score = document['score']
 			sentiment_value = float(score)
+			print(sentiment_value)
+			react_with_sound(sentiment_value)
 
 		#sets up array of key words parsed from words spoken
 		keywords = liteClient.getKeywords(spoken)
@@ -163,7 +165,7 @@ plays respective sound from speakers
 based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
-	lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
+	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
 	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
