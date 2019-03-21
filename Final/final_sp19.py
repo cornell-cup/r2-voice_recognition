@@ -166,6 +166,7 @@ based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
 	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
+	#lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds"
 	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
