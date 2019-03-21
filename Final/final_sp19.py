@@ -63,43 +63,48 @@ def main():
 		if ("r2 stop" in spoken_text):
 			print ("emergency invoked")
 			play_sound(sleep_final)
-			exit
+			break
 		
 		# R2 unsure of input
-		if (spoken == ""):
+		elif (spoken == ""):
 			print ("What?")
 			react_with_sound(no_clue_final)
 		
 		#sentiment analysis
-		if ("can you hear me now" in spoken):
+		elif ("can you hear me now" in spoken):
 			print ("yes i can hear you")
 			break
 			#run sentiment analysis here
 		
 		#sets up array of key words parsed from words spoken
 		keywords = liteClient.getKeywords(spoken)
-		
+			 
 		if ("high five" in spoken):
 			keywords.append("high five")
+			
+		for x in range (0, len(keywords)):
+			print ("1 " + keywords[x])
 		
 		fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
 		fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
 		
 		fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
-		fndictGetItemsKey = {"water", "bottle", "stickers"}
+		fndictGetItemsKeys = {"water", "bottle", "stickers"}
 		
 		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
 
 		
 		for x in range(0, len(keywords)):
-			print (keywords[x])
 			
-			if (fndictGreetingsKey.contains(keywords[x])):
-				fndctGreetings(keywords[x])
+			word = keywords[x]
+			print (word)
+			
+			if (word in fndictGreetingsKeys):
+				fndictGreetings[word]()
 				break
 		
-			if (fndictGetItemsKey.contains(keywords[x])):
-				fndictGetItems(keywords[x])
+			elif (word in fndictGetItemsKeys):
+				fndictGetItems[word](word)
 				break
 		
 		"""	
