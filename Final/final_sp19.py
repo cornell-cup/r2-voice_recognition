@@ -103,19 +103,19 @@ def take_attendance():
 
 def wave():
 	if (setup_bool == False):
-		setupbool == True
+		setup_bool == True
 	else:
 		print ("waving")
 	
 def greet():
 	if (setup_bool == False):
-		setupbool == True
+		setup_bool == True
 	else:
 		print ("greeting, don't forget to wave")
 
 def grab_item(item):
 	if (setup_bool == False):
-		setupbool == True
+		setup_bool == True
 	else:
 		print ("grabbing " + item)
 	
