@@ -9,8 +9,8 @@ File Created by Yanchen Zhan '22 (yz366)
 #import speech_recognition as sr
 #import pyaudio
 import nltk
-#nltk.download('vader_lexicon')
-#from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
+nltk.download('vader_lexicon')
+from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 #from random import *
 import simpleaudio as sa
 import json
@@ -193,8 +193,8 @@ def main():
 		fndictGetItemsKeys = {"water", "bottle", "stickers"}
 		
 		
-		fndictGreetings = {"wave":wave(setup_bool), "hello":greet(setup_bool), "hi":greet(setup_bool), "hey":greet(setup_bool)}
-		fndictGetItems = {"water":grab_item("bottle", setup_bool), "bottle":grab_item("bottle", setup_bool), "stickers":grab_item("sticker", setup_bool)}
+		fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
+		fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
 		
 		
 		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
