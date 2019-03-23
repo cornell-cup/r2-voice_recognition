@@ -10,7 +10,7 @@ File Created by Yanchen Zhan '22 (yz366)
 #import pyaudio
 import nltk
 #nltk.download('vader_lexicon')
-from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
+#from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 #from random import *
 import simpleaudio as sa
 import json
@@ -22,15 +22,15 @@ import json
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 \
     import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
+import retinasdk
+apiKey = "ac486a40-3220-11e9-bb65-69ed2d3c7927"
+liteClient = retinasdk.LiteClient(apiKey)
 
 naturalLanguageUnderstanding = NaturalLanguageUnderstandingV1(
 version='2018-11-16',
 iam_apikey='ZpNv1kcHqUvvzupBoxNRa-PvNKf-vbLnL6QLjBZTvHmr')
 
-import retinasdk
-apiKey = "ac486a40-3220-11e9-bb65-69ed2d3c7927"
-liteClient = retinasdk.LiteClient(apiKey)
-
+setup_bool = False
 no_clue_final = 999
 wakeup_final = 998
 sleep_final = 997
@@ -102,13 +102,22 @@ def take_attendance():
 	client.main()	
 
 def wave():
-	print ("waving")
+	if (setup_bool == False):
+		setupbool == True
+	else:
+		print ("waving")
 	
 def greet():
-	print ("greeting, don't forget to wave")
+	if (setup_bool == False):
+		setupbool == True
+	else:
+		print ("greeting, don't forget to wave")
 
 def grab_item(item):
-	print ("grabbing " + item)
+	if (setup_bool == False):
+		setupbool == True
+	else:
+		print ("grabbing " + item)
 	
 def main():
 ### opens microphone instance that takes speech from human to convert to text
@@ -184,8 +193,8 @@ def main():
 		fndictGetItemsKeys = {"water", "bottle", "stickers"}
 		
 		
-		fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
-		fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
+		fndictGreetings = {"wave":wave(setup_bool), "hello":greet(setup_bool), "hi":greet(setup_bool), "hey":greet(setup_bool)}
+		fndictGetItems = {"water":grab_item("bottle", setup_bool), "bottle":grab_item("bottle", setup_bool), "stickers":grab_item("sticker", setup_bool)}
 		
 		
 		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
