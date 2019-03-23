@@ -122,7 +122,7 @@ def main():
 		for x in range(0, len(keywords)):
 			
 			word = keywords[x]
-			#print (word)
+			print (word)
 			
 			if (word in fndictGreetingsKeys):
 				fndictGreetings.get(word)
