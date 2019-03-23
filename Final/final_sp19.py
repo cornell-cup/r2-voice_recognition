@@ -8,9 +8,9 @@ File Created by Yanchen Zhan '22 (yz366)
 # import respective packages
 #import speech_recognition as sr
 #import pyaudio
-#import nltk
+import nltk
 #nltk.download('vader_lexicon')
-#from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
+from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 #from random import *
 import simpleaudio as sa
 import json
@@ -121,7 +121,26 @@ def main():
 		#spoken_text = listen(r, mic)
 		#spoken_text = spoken_text.lower()
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
+
+		try:
+		#run sentiment analysis here
+			response = naturalLanguageUnderstanding.analyze(
+	        text=spoken_text,
+			features=Features(
+		    sentiment=SentimentOptions(document=None, targets=None))).get_result()
+
+			parsed_json = json.loads(json.dumps(response, indent=2))
+			sentiment = parsed_json['sentiment']
+			document = sentiment['document']
+			score = document['score']
+			sentiment_value = float(score)
 		
+		except:
+			sentiment_value = sid().polarity_scores(spoken_text)['compound']
+			
+		print(sentiment_value)	
+		react_with_sound(sentiment_value)
+
 		if ("r2 stop" in spoken_text):
 			print ("emergency invoked")
 			react_with_sound(sleep_final)
@@ -153,20 +172,6 @@ def main():
 		#sentiment analysis
 		elif ("can you hear me now" in spoken):
 			print ("yes i can hear you")
-			
-			#run sentiment analysis here
-			response = naturalLanguageUnderstanding.analyze(
-	          	text=spoken,
-			    features=Features(
-		        sentiment=SentimentOptions(document=None, targets=None))).get_result()
-
-			parsed_json = json.loads(json.dumps(response, indent=2))
-			sentiment = parsed_json['sentiment']
-			document = sentiment['document']
-			score = document['score']
-			sentiment_value = float(score)
-			print(sentiment_value)
-			react_with_sound(sentiment_value)
 
 		#sets up array of key words parsed from words spoken
 		keywords = liteClient.getKeywords(spoken)
