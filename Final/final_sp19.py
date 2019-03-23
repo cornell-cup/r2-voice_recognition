@@ -3,7 +3,6 @@ This is the final code structure for the R2D2 project
 Cornell Cup Robotics, Spring 2019
 
 File Created by Yanchen Zhan '22 (yz366)
-
 """
 
 # import respective packages
@@ -37,7 +36,80 @@ wakeup_final = 998
 sleep_final = 997
 move_final = 996
 attendance_final = 995
+		
+"""
+listen to user statement in mic
+returns spoken words from user OR 
+returns empty string if source not detected
+"""
+def listen(r, mic):
+	with mic as source:
+		r.adjust_for_ambient_noise(source)
+		print("\n\n\nYou may begin talking:\n\n\n") #testing
+		audio = r.listen(source)
 
+	try:
+		return r.recognize_google(audio)
+
+	except sr.UnknownValueError:
+		print ("What are you saying?") #testing
+		return ""
+
+
+"""
+plays respective sound from speakers
+based on sentiment analysis value
+"""
+def react_with_sound (sentiment_value):
+	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
+	#lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
+	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
+	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
+	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
+	"attendance":"R2Attendance.wav"}
+
+	if (sentiment_value == no_clue_final):
+		play_sound(lead_folder + sounds["no clue"])
+	elif (sentiment_value == wakeup_final):
+		play_sound(lead_folder + sounds["wake up"])
+	elif (sentiment_value == sleep_final):
+		play_sound(lead_folder + sounds["sleep"])
+	elif (sentiment_value == move_final):
+		play_sound(lead_folder + sounds["move"])
+	elif (sentiment_value == attendance_final):
+		play_sound(lead_folder + sounds["attendance"])
+	elif (sentiment_value < -0.5):
+		play_sound(lead_folder + sounds["angry"])
+	elif (sentiment_value < 0):
+		play_sound(lead_folder + sounds["sad"])
+	elif (sentiment_value == 0):
+		play_sound(lead_folder + sounds["neutral"])
+	elif (sentiment_value > 0.5):
+		play_sound(lead_folder + sounds["happy"])
+	else:
+		play_sound(lead_folder + sounds["good"])
+
+### play sound from speakers
+def play_sound(file_name):
+	wave_obj = sa.WaveObject.from_wave_file(file_name)
+	play_obj = wave_obj.play()
+	play_obj.wait_done()
+
+# have R2 take attendance
+def take_attendance():
+	print ("checking in - F.R.")
+	react_with_sound(attendance_final)
+	client.main()	
+
+def wave():
+	print ("waving")
+	
+def greet():
+	print ("greeting, don't forget to wave")
+
+def grab_item(item):
+	print ("grabbing " + item)
+	
 def main():
 ### opens microphone instance that takes speech from human to convert to text
 	#r = sr.Recognizer()
@@ -106,15 +178,15 @@ def main():
 			 
 		if ("high five" in spoken):
 			keywords.append("high five")
-			
-		for x in range (0, len(keywords)):
-			print ("1 " + keywords[x])
+		
+		
+		fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
+		fndictGetItemsKeys = {"water", "bottle", "stickers"}
+		
 		
 		fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
-		fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
-		
 		fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
-		fndictGetItemsKeys = {"water", "bottle", "stickers"}
+		
 		
 		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
 
@@ -126,10 +198,12 @@ def main():
 			
 			if (word in fndictGreetingsKeys):
 				fndictGreetings.get(word)
+				print ("in fndictGreetingKeys")
 				break
 		
 			elif (word in fndictGetItemsKeys):
 				fndictGetItems.get(word)
+				print ("in fndictGetItemsKey")
 				break
 		
 		"""	
@@ -145,80 +219,6 @@ def main():
 		elif ("rock paper scissors" in keywords or "game" in keywords):
 			game("rock paper scissors")
 		"""
-		
-"""
-listen to user statement in mic
-returns spoken words from user OR 
-returns empty string if source not detected
-"""
-def listen(r, mic):
-	with mic as source:
-		r.adjust_for_ambient_noise(source)
-		print("\n\n\nYou may begin talking:\n\n\n") #testing
-		audio = r.listen(source)
-
-	try:
-		return r.recognize_google(audio)
-
-	except sr.UnknownValueError:
-		print ("What are you saying?") #testing
-		return ""
-
-
-"""
-plays respective sound from speakers
-based on sentiment analysis value
-"""
-def react_with_sound (sentiment_value):
-	#lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
-	lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
-	sounds = {"wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
-	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
-	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
-	"attendance":"R2Attendance.wav"}
-
-	if (sentiment_value == no_clue_final):
-		play_sound(lead_folder + sounds["no clue"])
-	elif (sentiment_value == wakeup_final):
-		play_sound(lead_folder + sounds["wake up"])
-	elif (sentiment_value == sleep_final):
-		play_sound(lead_folder + sounds["sleep"])
-	elif (sentiment_value == move_final):
-		play_sound(lead_folder + sounds["move"])
-	elif (sentiment_value == attendance_final):
-		play_sound(lead_folder + sounds["attendance"])
-	elif (sentiment_value < -0.5):
-		play_sound(lead_folder + sounds["angry"])
-	elif (sentiment_value < 0):
-		play_sound(lead_folder + sounds["sad"])
-	elif (sentiment_value == 0):
-		play_sound(lead_folder + sounds["neutral"])
-	elif (sentiment_value > 0.5):
-		play_sound(lead_folder + sounds["happy"])
-	else:
-		play_sound(lead_folder + sounds["good"])
-
-### play sound from speakers
-def play_sound(file_name):
-	wave_obj = sa.WaveObject.from_wave_file(file_name)
-	play_obj = wave_obj.play()
-	play_obj.wait_done()
-
-# have R2 take attendance
-def take_attendance():
-	print ("checking in - F.R.")
-	react_with_sound(attendance_final)
-	client.main()	
-
-def wave():
-	print ("waving")
-	
-def greet():
-	print ("greeting, don't forget to wave")
-
-def grab_item(item):
-	print ("grabbing" + item)
-	
 
 
 main()

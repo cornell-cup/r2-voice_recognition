@@ -111,7 +111,7 @@ def main():
 			#TODO: change this section to be more specific to perform more specific analysis
 	
 		### sound output
-	#	react_with_sound(sentiment_value)
+		#react_with_sound(sentiment_value)
 			
 		""" 
 		# moving R2
