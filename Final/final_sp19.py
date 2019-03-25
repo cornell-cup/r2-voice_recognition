@@ -31,6 +31,7 @@ version='2018-11-16',
 iam_apikey='ZpNv1kcHqUvvzupBoxNRa-PvNKf-vbLnL6QLjBZTvHmr')
 
 setup_bool = False
+# setup_cnt = False
 confirmation_final = 1000
 no_clue_final = 999
 wakeup_final = 998
@@ -104,25 +105,27 @@ def take_attendance():
 	react_with_sound(attendance_final)
 	client.main()	
 
-def wave():
+def wave(methodcnt):
 	global setup_bool
-	if (setup_bool == False):
+	# initial bootup
+	if (setup_bool == False or methodcnt == False):
 		setup_bool = True
 	else:
 		print ("waving")
 		react_with_sound(confirmation_final)
 	
-def greet():
+def greet(methodcnt):
 	global setup_bool
-	if (setup_bool == False):
+	global setup_cnt
+	if (setup_bool == False or methodcnt == False):
 		setup_bool = True
 	else:
 		print ("greeting, don't forget to wave")
 		react_with_sound(confirmation_final)
 
-def grab_item(item):
+def grab_item(item, methodcnt):
 	global setup_bool
-	if (setup_bool == False):
+	if (setup_bool == False or methodcnt == False):
 		setup_bool = True
 	else:
 		print ("grabbing " + item)
@@ -130,15 +133,19 @@ def grab_item(item):
 	
 def main():
 	
+	methodcnt = False
+	
 	#test run to see if all r2 functionality working as expected
 	fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
 	fndictGetItemsKeys = {"water", "bottle", "stickers"}
 		
-	#in formation of dictionaries, all methods being called
-	fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
-	fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
-		
-### opens microphone instance that takes speech from human to convert to text
+	#in formation of dictionaries, all functions being called
+	fndictGreetings = {"wave":wave(methodcnt), "hello":greet(methodcnt), "hi":greet(methodcnt), "hey":greet(methodcnt)}
+	fndictGetItems = {"water":grab_item("bottle", methodcnt), "bottle":grab_item("bottle", methodcnt), "stickers":grab_item("sticker", methodcnt)}
+	
+	methodcnt = True
+	
+	### opens microphone instance that takes speech from human to convert to text
 	#r = sr.Recognizer()
 	#mic = sr.Microphone(2)
 
