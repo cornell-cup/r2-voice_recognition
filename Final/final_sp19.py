@@ -105,27 +105,39 @@ def take_attendance():
 	client.main()	
 
 def wave():
+	global setup_bool
 	if (setup_bool == False):
-		setup_bool == True
+		setup_bool = True
 	else:
 		print ("waving")
 		react_with_sound(confirmation_final)
 	
 def greet():
+	global setup_bool
 	if (setup_bool == False):
-		setup_bool == True
+		setup_bool = True
 	else:
 		print ("greeting, don't forget to wave")
 		react_with_sound(confirmation_final)
 
 def grab_item(item):
+	global setup_bool
 	if (setup_bool == False):
-		setup_bool == True
+		setup_bool = True
 	else:
 		print ("grabbing " + item)
 		react_with_sound(confirmation_final)
 	
 def main():
+	
+	#test run to see if all r2 functionality working as expected
+	fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
+	fndictGetItemsKeys = {"water", "bottle", "stickers"}
+		
+	#in formation of dictionaries, all methods being called
+	fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
+	fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
+		
 ### opens microphone instance that takes speech from human to convert to text
 	#r = sr.Recognizer()
 	#mic = sr.Microphone(2)
@@ -169,6 +181,7 @@ def main():
 	
 	# R2 waits to hear what user wants - CHANGE PROMPTS HERE
 	while (True):
+		
 		spoken = input("enter text here 2: ")
 		#spoken = simplify_text(listen (r, mic))
 		#spoken = spoken.lower()
@@ -177,7 +190,7 @@ def main():
 		if ("r2 stop" in spoken_text):
 			print ("emergency invoked")
 			play_sound(sleep_final)
-			break
+			exit
 		
 		# R2 unsure of input
 		elif (spoken == ""):
@@ -194,15 +207,6 @@ def main():
 		if ("high five" in spoken):
 			keywords.append("high five")
 		
-		
-		fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
-		fndictGetItemsKeys = {"water", "bottle", "stickers"}
-		
-		
-		fndictGreetings = {"wave":wave(), "hello":greet(), "hi":greet(), "hey":greet()}
-		fndictGetItems = {"water":grab_item("bottle"), "bottle":grab_item("bottle"), "stickers":grab_item("sticker")}
-		
-		
 		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
 
 		
@@ -212,12 +216,12 @@ def main():
 			print (word)
 			
 			if (word in fndictGreetingsKeys):
-				fndictGreetings.get(word)
+				fndictGreetings[word]
 				print ("in fndictGreetingKeys")
 				break
 		
 			elif (word in fndictGetItemsKeys):
-				fndictGetItems.get(word)
+				fndictGetItems[word]
 				print ("in fndictGetItemsKey")
 				break
 		
