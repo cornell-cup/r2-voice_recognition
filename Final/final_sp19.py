@@ -6,6 +6,7 @@ File Created by Yanchen Zhan '22 (yz366)
 """
 
 # import respective packages
+import sys
 #import speech_recognition as sr
 #import pyaudio
 import nltk
@@ -31,7 +32,6 @@ version='2018-11-16',
 iam_apikey='ZpNv1kcHqUvvzupBoxNRa-PvNKf-vbLnL6QLjBZTvHmr')
 
 setup_bool = False
-# setup_cnt = False
 confirmation_final = 1000
 no_clue_final = 999
 wakeup_final = 998
@@ -99,6 +99,11 @@ def play_sound(file_name):
 	play_obj = wave_obj.play()
 	play_obj.wait_done()
 
+def stop():
+	print ("emergency invoked")
+	react_with_sound(sleep_final)
+	sys.exit()
+	
 # have R2 take attendance
 def take_attendance():
 	print ("checking in - F.R.")
@@ -143,6 +148,8 @@ def main():
 	fndictGreetings = {"wave":wave(methodcnt), "hello":greet(methodcnt), "hi":greet(methodcnt), "hey":greet(methodcnt)}
 	fndictGetItems = {"water":grab_item("bottle", methodcnt), "bottle":grab_item("bottle", methodcnt), "stickers":grab_item("sticker", methodcnt)}
 	
+	#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
+	
 	methodcnt = True
 	
 	### opens microphone instance that takes speech from human to convert to text
@@ -156,29 +163,8 @@ def main():
 		#spoken_text = spoken_text.lower()
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
 
-		try:
-		#run sentiment analysis here
-			response = naturalLanguageUnderstanding.analyze(
-	        text=spoken_text,
-			features=Features(
-		    sentiment=SentimentOptions(document=None, targets=None))).get_result()
-
-			parsed_json = json.loads(json.dumps(response, indent=2))
-			sentiment = parsed_json['sentiment']
-			document = sentiment['document']
-			score = document['score']
-			sentiment_value = float(score)
-		
-		except:
-			sentiment_value = sid().polarity_scores(spoken_text)['compound']
-			
-		print(sentiment_value)	
-		react_with_sound(sentiment_value)
-
 		if ("r2 stop" in spoken_text):
-			print ("emergency invoked")
-			react_with_sound(sleep_final)
-			exit
+			stop()
 		
 		if ("hey r2" in spoken_text):
 			print ("awake")
@@ -194,10 +180,8 @@ def main():
 		#spoken = spoken.lower()
 		print("The following text was said:\n" + spoken + "\n")
 		
-		if ("r2 stop" in spoken_text):
-			print ("emergency invoked")
-			play_sound(sleep_final)
-			exit
+		if ("r2 stop" in spoken):
+			stop()
 		
 		# R2 unsure of input
 		elif (spoken == ""):
@@ -207,15 +191,32 @@ def main():
 		#sentiment analysis
 		elif ("can you hear me now" in spoken):
 			print ("yes i can hear you")
+			try:
+			#run sentiment analysis here
+				spoken = input("enter text here 3: ")
+					
+				response = naturalLanguageUnderstanding.analyze(
+				text=spoken,
+				features=Features(
+				sentiment=SentimentOptions(document=None, targets=None))).get_result()
+
+				parsed_json = json.loads(json.dumps(response, indent=2))
+				sentiment = parsed_json['sentiment']
+				document = sentiment['document']
+				score = document['score']
+				sentiment_value = float(score)
+			
+			except:
+				sentiment_value = sid().polarity_scores(spoken)['compound']
+			
+			print(sentiment_value)	
+			react_with_sound(sentiment_value)
 
 		#sets up array of key words parsed from words spoken
 		keywords = liteClient.getKeywords(spoken)
 			 
 		if ("high five" in spoken):
 			keywords.append("high five")
-		
-		#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
-
 		
 		for x in range(0, len(keywords)):
 			
