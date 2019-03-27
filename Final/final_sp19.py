@@ -63,11 +63,14 @@ plays respective sound from speakers
 based on sentiment analysis value
 """
 def react_with_sound (sentiment_value):
+	
+	print ("about to play sound...")
+	
 	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
 	#lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
-	sounds = {"confirmation":"R2OK.wav", "wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
-	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav", "sad":"R2Sad.wav", \
-	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav", "move":"R2Move.wav", \
+	sounds = {"confirmation":"R2OK.wav" , "wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
+	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav" , "sad":"R2Sad.wav" , \
+	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav" , "move":"R2Move.wav" , \
 	"attendance":"R2Attendance.wav"}
 	
 	if (sentiment_value == confirmation_final):
@@ -117,7 +120,7 @@ def wave(methodcnt):
 		setup_bool = True
 	else:
 		print ("waving")
-		react_with_sound(confirmation_final)
+		#react_with_sound(confirmation_final)
 	
 def greet(methodcnt):
 	global setup_bool
@@ -126,7 +129,7 @@ def greet(methodcnt):
 		setup_bool = True
 	else:
 		print ("greeting, don't forget to wave")
-		react_with_sound(confirmation_final)
+		#react_with_sound(confirmation_final)
 
 def grab_item(item, methodcnt):
 	global setup_bool
@@ -134,7 +137,7 @@ def grab_item(item, methodcnt):
 		setup_bool = True
 	else:
 		print ("grabbing " + item)
-		react_with_sound(confirmation_final)
+		#react_with_sound (confirmation_final)
 	
 def main():
 	
@@ -223,7 +226,9 @@ def main():
 			word = keywords[x]
 			print (word)
 			
-			if (word in fndictGreetingsKeys):
+			react_with_sound (confirmation_final)
+			
+			if (word in fndictGreetingsKeys):	
 				fndictGreetings[word]
 				print ("in fndictGreetingKeys")
 				break
