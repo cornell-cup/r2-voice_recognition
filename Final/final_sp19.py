@@ -146,12 +146,12 @@ def main():
 	#test run to see if all r2 functionality working as expected
 	fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
 	fndictGetItemsKeys = {"water", "bottle", "stickers"}
-		
+	#fndictGetGamesKey = {"None", "rock paper scissors"}
+	
 	#in formation of dictionaries, all functions being called
 	fndictGreetings = {"wave":wave(methodcnt), "hello":greet(methodcnt), "hi":greet(methodcnt), "hey":greet(methodcnt)}
 	fndictGetItems = {"water":grab_item("bottle", methodcnt), "bottle":grab_item("bottle", methodcnt), "stickers":grab_item("sticker", methodcnt)}
-	
-	#fndictGames = {"games":game(None), "rock paper scissors":game("rock paper scissors")}
+	#fndictGames = {"game":game("None"), "games":game("None"), "rock paper scissors":game("rock paper scissors")}
 	
 	methodcnt = True
 	
@@ -192,68 +192,64 @@ def main():
 			react_with_sound(no_clue_final)
 		
 		#sentiment analysis
-		elif ("can you hear me now" in spoken):
-			print ("yes i can hear you")
 			
-			while (not("stop" in spoken)):
-				try:
-				#run sentiment analysis here
-					spoken = input("enter text here 3: ")
-						
-					response = naturalLanguageUnderstanding.analyze(
-					text=spoken,
-					features=Features(
-					sentiment=SentimentOptions(document=None, targets=None))).get_result()
+		#while (not("stop" in spoken) or not("thank you" in spoken)):
+		try:
+				
+			response = naturalLanguageUnderstanding.analyze(
+			text=spoken,
+			features=Features(
+			sentiment=SentimentOptions(document=None, targets=None))).get_result()
 
-					parsed_json = json.loads(json.dumps(response, indent=2))
-					sentiment = parsed_json['sentiment']
-					document = sentiment['document']
-					score = document['score']
-					sentiment_value = float(score)
-				
-				except:
-					sentiment_value = sid().polarity_scores(spoken)['compound']
-				
-				print(sentiment_value)	
-				react_with_sound(sentiment_value)
+			parsed_json = json.loads(json.dumps(response, indent=2))
+			sentiment = parsed_json['sentiment']
+			document = sentiment['document']
+			score = document['score']
+			sentiment_value = float(score)
+		
+		except:
+			sentiment_value = sid().polarity_scores(spoken)['compound']
+		
+		print(sentiment_value)	
+		react_with_sound(sentiment_value)
 
 		#parse intents
-		else:
+		#else:
 			#sets up array of key words parsed from words spoken
-			keywords = liteClient.getKeywords(spoken)
-				 
-			if ("high five" in spoken):
-				keywords.append("high five")
+		keywords = liteClient.getKeywords(spoken)
+			 
+		if ("high five" in spoken):
+			keywords.append("high five")
+		
+		for x in range(0, len(keywords)):
 			
-			for x in range(0, len(keywords)):
+			word = keywords[x]
+			print (word)
+			
+			react_with_sound (confirmation_final)
+			
+			if (word in fndictGreetingsKeys):	
+				fndictGreetings[word]
+				print ("in fndictGreetingKeys")
+		
+			elif (word in fndictGetItemsKeys):
+				fndictGetItems[word]
+				print ("in fndictGetItemsKey")
+				break
+		
+		"""
+		#tell R2 to give information about Cornell Cup
+		if ("competition" in keywords):
+			spit_info()
 				
-				word = keywords[x]
-				print (word)
-				
-				react_with_sound (confirmation_final)
-				
-				if (word in fndictGreetingsKeys):	
-					fndictGreetings[word]
-					print ("in fndictGreetingKeys")
-			
-				elif (word in fndictGetItemsKeys):
-					fndictGetItems[word]
-					print ("in fndictGetItemsKey")
-					break
-			
-			"""	
-			#tell R2 to give information about Cornell Cup
-			if ("competition" in keywords):
-				spit_info()
-					
-			#tell R2 to open Periscope
-			elif ("periscope" in keywords):
-				open_periscope()
-			
-			#tell R2 to play a game
-			elif ("rock paper scissors" in keywords or "game" in keywords):
-				game("rock paper scissors")
-			"""
+		#tell R2 to open Periscope
+		elif ("periscope" in keywords):
+			open_periscope()
+		
+		#tell R2 to play a game
+		elif ("rock paper scissors" in keywords or "game" in keywords):
+			game("rock paper scissors")
+		"""
 
 
 main()
