@@ -138,7 +138,10 @@ def grab_item(item, methodcnt):
 	else:
 		print ("grabbing " + item)
 		#react_with_sound (confirmation_final)
-	
+
+def spit_info():
+	print ("info spit")
+
 def main():
 	
 	methodcnt = False
@@ -192,17 +195,19 @@ def main():
 			react_with_sound(no_clue_final)
 		
 		#use NLTK to determine part of speech of first word spoken
-		
 		tokens = nltk.word_tokenize (spoken)
 		tagged = nltk.pos_tag(tokens)
 		print (tagged[0])
 		
+		keywords = liteClient.getKeywords(spoken)
+		
+		#if question desired about Cornell Cup
+		if ("cup" in keywords and "cornell" in keywords or "competition" in keywords):
+			spit_info()
+			
+			
 		#run through commands first
-		if ("VB" in tagged[0]):
-							#parse intents
-			#else:
-				#sets up array of key words parsed from words spoken
-			keywords = liteClient.getKeywords(spoken)
+		elif ("VB" in tagged[0]):
 				 
 			if ("high five" in spoken):
 				keywords.append("high five")
@@ -223,11 +228,7 @@ def main():
 					print ("in fndictGetItemsKey")
 					break
 			
-			"""
-			#tell R2 to give information about Cornell Cup
-			if ("competition" in keywords):
-				spit_info()
-					
+			"""	
 			#tell R2 to open Periscope
 			elif ("periscope" in keywords):
 				open_periscope()
@@ -239,8 +240,7 @@ def main():
 		
 		else:	
 			#sentiment analysis
-				
-			#while (not("stop" in spoken) or not("thank you" in spoken)):
+
 			try:
 					
 				response = naturalLanguageUnderstanding.analyze(
