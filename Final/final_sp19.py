@@ -11,6 +11,8 @@ import sys
 #import pyaudio
 import nltk
 nltk.download('vader_lexicon')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as sid
 #from random import *
 import simpleaudio as sa
@@ -38,6 +40,13 @@ wakeup_final = 998
 sleep_final = 997
 move_final = 996
 attendance_final = 995
+
+sentences = open("sentences.txt","w+")
+
+for i in range(10):
+     sentences.write("This is line %d\r\n" % (i+1))
+
+sentences.close() 
 		
 """
 listen to user statement in mic
@@ -66,8 +75,8 @@ def react_with_sound (sentiment_value):
 	
 	print ("about to play sound...")
 	
-	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
-	#lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
+	#lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
+	lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
 	sounds = {"confirmation":"R2OK.wav" , "wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav" , "sad":"R2Sad.wav" , \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav" , "move":"R2Move.wav" , \
@@ -146,6 +155,11 @@ def grab_item(item, methodcnt):
 def spit_info():
 	print ("info spit")
 
+def write(input):
+	file=open('sentences.txt','a+')
+	file.write(input)
+	file.close()	
+
 def main():
 	
 	methodcnt = False
@@ -179,6 +193,7 @@ def main():
 			react_with_sound(no_clue_final)
 		
 		elif ("r2 stop" in spoken_text):
+			write(spoken_text)
 			stop()
 		
 		elif ("hey r2" in spoken_text):
@@ -220,22 +235,22 @@ def main():
 			if ("high five" in spoken):
 				keywords.append("high five")
 			
-			for x in range(0, len(keywords)):
+		for x in range(0, len(keywords)):
 				
-				word = keywords[x]
-				print (word)
+			word = keywords[x]
+			print (word)
 				
-				react_with_sound (confirmation_final)
-				
-				if (word in fndictGreetingsKeys):	
-					fndictGreetings[word]
-					print ("in fndictGreetingKeys")
-					break
+			react_with_sound (confirmation_final)
+					
+			if (word in fndictGreetingsKeys):	
+				fndictGreetings[word]
+				print ("in fndictGreetingKeys")
+				break
 			
-				elif (word in fndictGetItemsKeys):
-					fndictGetItems[word]
-					print ("in fndictGetItemsKey")
-					break
+			elif (word in fndictGetItemsKeys):
+				fndictGetItems[word]
+				print ("in fndictGetItemsKey")
+				break
 			
 			"""	
 			#tell R2 to open Periscope
