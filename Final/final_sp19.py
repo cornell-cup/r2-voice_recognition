@@ -32,7 +32,7 @@ liteClient = retinasdk.LiteClient(apiKey)
 
 naturalLanguageUnderstanding = NaturalLanguageUnderstandingV1(
 version='2018-11-16',
-iam_apikey='ZpNv1kcHqUvvzupBoxNRa-PvNKf-vbLnL6QLjBZTvHmr')
+iam_apikey='_wxBEgRMBJ_WzXRWYzlTLYrNp3A0mmYEjKp-UQsdhvap')
 
 setup_bool = False
 confirmation_final = 1000
@@ -69,8 +69,8 @@ def react_with_sound (sentiment_value):
 	
 	print ("about to play sound...")
 	
-	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
-	#lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
+	#lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
+	lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
 	sounds = {"confirmation":"R2OK.wav" , "wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav" , "sad":"R2Sad.wav" , \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav" , "move":"R2Move.wav" , \
