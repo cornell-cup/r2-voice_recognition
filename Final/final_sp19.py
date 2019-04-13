@@ -108,10 +108,14 @@ def stop():
 	sys.exit()
 	
 # have R2 take attendance
-def take_attendance():
-	print ("checking in - F.R.")
-	react_with_sound(attendance_final)
-	client.main()	
+def take_attendance(methodcnt):
+	global setup_bool
+	if (setup_bool == False or methodcnt == False):
+		setup_bool = True
+	else:
+		print ("checking in - F.R.")
+		react_with_sound(attendance_final)
+		client.main()	
 
 def wave(methodcnt):
 	global setup_bool
@@ -152,7 +156,7 @@ def main():
 	#fndictGetGamesKey = {"None", "rock paper scissors"}
 	
 	#in formation of dictionaries, all functions being called
-	fndictGreetings = {"wave":wave(methodcnt), "hello":greet(methodcnt), "hi":greet(methodcnt), "hey":greet(methodcnt)}
+	fndictGreetings = {"wave":wave(methodcnt), "hello":greet(methodcnt), "hi":greet(methodcnt), "hey":greet(methodcnt), "check":take_attendance(methodcnt), "attendance":take_attendance(methodcnt)}
 	fndictGetItems = {"water":grab_item("bottle", methodcnt), "bottle":grab_item("bottle", methodcnt), "stickers":grab_item("sticker", methodcnt)}
 	#fndictGames = {"game":game("None"), "games":game("None"), "rock paper scissors":game("rock paper scissors")}
 	
@@ -168,11 +172,16 @@ def main():
 		#spoken_text = listen(r, mic)
 		#spoken_text = spoken_text.lower()
 		print("The following startup phrase was said:\n" + spoken_text + "\n")
-
-		if ("r2 stop" in spoken_text):
+		
+		# R2 unsure of input
+		if (spoken_text == ""):
+			print ("What?")
+			react_with_sound(no_clue_final)
+		
+		elif ("r2 stop" in spoken_text):
 			stop()
 		
-		if ("hey r2" in spoken_text):
+		elif ("hey r2" in spoken_text):
 			print ("awake")
 			react_with_sound(wakeup_final)
 			break
@@ -205,7 +214,6 @@ def main():
 		if ("cup" in keywords and "cornell" in keywords or "competition" in keywords):
 			spit_info()
 			
-			
 		#run through commands first
 		elif ("VB" in tagged[0]):
 				 
@@ -222,6 +230,7 @@ def main():
 				if (word in fndictGreetingsKeys):	
 					fndictGreetings[word]
 					print ("in fndictGreetingKeys")
+					break
 			
 				elif (word in fndictGetItemsKeys):
 					fndictGetItems[word]
@@ -262,4 +271,3 @@ def main():
 
 main()
 
-	
