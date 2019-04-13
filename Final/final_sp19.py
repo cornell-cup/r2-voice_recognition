@@ -247,32 +247,32 @@ def main():
 			if ("high five" in spoken):
 				keywords.append("high five")
 			
-		for x in range(0, len(keywords)):
-				
-			word = keywords[x]
-			print (word)
-				
-			react_with_sound (confirmation_final)
+			for x in range(0, len(keywords)):
 					
-			if (word in fndictGreetingsKeys):	
-				fndictGreetings[word]
-				print ("in fndictGreetingKeys")
-				break
-			
-			elif (word in fndictGetItemsKeys):
-				fndictGetItems[word]
-				print ("in fndictGetItemsKey")
-				break
-			
-			"""	
-			#tell R2 to open Periscope
-			elif ("periscope" in keywords):
-				open_periscope()
-			
-			#tell R2 to play a game
-			elif ("rock paper scissors" in keywords or "game" in keywords):
-				game("rock paper scissors")
-			"""
+				word = keywords[x]
+				print (word)
+					
+				react_with_sound (confirmation_final)
+						
+				if (word in fndictGreetingsKeys):	
+					fndictGreetings[word]
+					print ("in fndictGreetingKeys")
+					break
+				
+				elif (word in fndictGetItemsKeys):
+					fndictGetItems[word]
+					print ("in fndictGetItemsKey")
+					break
+				
+				"""	
+				#tell R2 to open Periscope
+				elif ("periscope" in keywords):
+					open_periscope()
+				
+				#tell R2 to play a game
+				elif ("rock paper scissors" in keywords or "game" in keywords):
+					game("rock paper scissors")
+				"""
 		
 		else:	
 			#sentiment analysis
