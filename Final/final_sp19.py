@@ -26,7 +26,8 @@ from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 \
     import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
 import retinasdk
-apiKey = "69ba0c10-5e17-11e9-8f72-af685da1b20e"
+#apiKey = "69ba0c10-5e17-11e9-8f72-af685da1b20e"
+apiKey = "f09d0fe0-3223-11e9-bb65-69ed2d3c7927" #FOR DEMO DAY ONLY
 liteClient = retinasdk.LiteClient(apiKey)
 
 naturalLanguageUnderstanding = NaturalLanguageUnderstandingV1(
@@ -108,18 +109,8 @@ def stop():
 	print ("emergency invoked")
 	react_with_sound(sleep_final)
 	sys.exit()
-	
-# have R2 take attendance
-def take_attendance(methodcnt):
-	global setup_bool
-	if (setup_bool == False or methodcnt == False):
-		setup_bool = True
-	else:
-		print ("checking in - F.R.")
-		react_with_sound(attendance_final)
-		client.main()	
 
-def wave(methodcnt):
+def wave(methodcnt): # NOTE - INSTANTIATE WITH SPECIAL CASE
 	global setup_bool
 	# initial bootup
 	if (setup_bool == False or methodcnt == False):
@@ -127,16 +118,29 @@ def wave(methodcnt):
 	else:
 		print ("waving")
 		#react_with_sound(confirmation_final)
+	return 0
 	
 def greet(methodcnt):
 	global setup_bool
-	global setup_cnt
 	if (setup_bool == False or methodcnt == False):
 		setup_bool = True
 	else:
 		print ("greeting, don't forget to wave")
 		#react_with_sound(confirmation_final)
+	return 1
 
+# have R2 take attendance
+def take_attendance(methodcnt):
+	global setup_bool
+	if (setup_bool == False or methodcnt == False):
+		print ("in if statement")
+		setup_bool = True
+	else:
+		print ("checking in - F.R.")
+		react_with_sound(attendance_final)
+		client.main()	
+	return 2
+		
 def grab_item(item, methodcnt):
 	global setup_bool
 	if (setup_bool == False or methodcnt == False):
@@ -144,10 +148,12 @@ def grab_item(item, methodcnt):
 	else:
 		print ("grabbing " + item)
 		#react_with_sound (confirmation_final)
-
+	return 3
+	
 def spit_info():
 	print ("info spit")
-
+	return 4
+	
 def write(input):
 	file=open('sentences.txt','a+')
 	file.write(input + "\r\n")
@@ -171,19 +177,24 @@ def sentiment(input):
 			
 	print(sentiment_value)	
 	react_with_sound(sentiment_value)
-
+	return 5
+	
 def main():
 	
 	methodcnt = False
 	
+	#method dispatcher to connect to functions
+	dispatcher = {'wave1':wave, 'greet1':greet, 'take_attendance1':take_attendance, 'grab_item1':grab_item}
+	# https://www.reddit.com/r/Python/comments/7udbs1/using_python_dict_to_call_functions_based_on_user/
+	
 	#test run to see if all r2 functionality working as expected
-	fndictGreetingsKeys = {"wave", "hello", "hi", "hey"}
+	fndictGreetingsKeys = {"wave", "hello", "hi", "hey", "check", "attendance"}
 	fndictGetItemsKeys = {"water", "bottle", "stickers"}
 	#fndictGetGamesKey = {"None", "rock paper scissors"}
 	
 	#in formation of dictionaries, all functions being called
-	fndictGreetings = {"wave":wave(methodcnt), "hello":greet(methodcnt), "hi":greet(methodcnt), "hey":greet(methodcnt), "check":take_attendance(methodcnt), "attendance":take_attendance(methodcnt)}
-	fndictGetItems = {"water":grab_item("bottle", methodcnt), "bottle":grab_item("bottle", methodcnt), "stickers":grab_item("sticker", methodcnt)}
+	fndictGreetings = {"wave":dispatcher['wave1'], "hello":dispatcher['greet1'], "hi":dispatcher['greet1'], "hey":dispatcher['greet1'], "check":dispatcher['take_attendance1'], "attendance":dispatcher['take_attendance1']}
+	fndictGetItems = {"water":dispatcher['grab_item1'], "bottle":dispatcher['grab_item1'], "stickers":dispatcher['grab_item1']}
 	#fndictGames = {"game":game("None"), "games":game("None"), "rock paper scissors":game("rock paper scissors")}
 	
 	methodcnt = True
@@ -211,8 +222,7 @@ def main():
 		elif ("hey r2" in spoken_text):
 			print ("awake")
 			react_with_sound(wakeup_final)
-			break
-			
+			break			
 	
 	# R2 waits to hear what user wants - CHANGE PROMPTS HERE
 	while (True):
@@ -247,32 +257,36 @@ def main():
 			if ("high five" in spoken):
 				keywords.append("high five")
 			
-			for x in range(0, len(keywords)):
-					
-				word = keywords[x]
-				print (word)
-					
-				react_with_sound (confirmation_final)
+			if "wave" in keywords:
+				wave()
+				break
+			else:
+				for x in range(0, len(keywords)):
 						
-				if (word in fndictGreetingsKeys):	
-					fndictGreetings[word]
-					print ("in fndictGreetingKeys")
-					break
-				
-				elif (word in fndictGetItemsKeys):
-					fndictGetItems[word]
-					print ("in fndictGetItemsKey")
-					break
-				
-				"""	
-				#tell R2 to open Periscope
-				elif ("periscope" in keywords):
-					open_periscope()
-				
-				#tell R2 to play a game
-				elif ("rock paper scissors" in keywords or "game" in keywords):
-					game("rock paper scissors")
-				"""
+					word = keywords[x]
+					print (word)
+						
+					react_with_sound (confirmation_final)
+							
+					if (word in fndictGreetingsKeys):	
+						print(fndictGreetings[word](methodcnt))
+						print ("in fndictGreetingKeys")
+						break
+					
+					elif (word in fndictGetItemsKeys):
+						print(fndictGetItems[word](word, methodcnt))
+						print ("in fndictGetItemsKey")
+						break
+					
+					#tell R2 to open Periscope
+					elif ("periscope" in keywords):
+						open_periscope()
+					
+					"""	
+					#tell R2 to play a game
+					elif ("rock paper scissors" in keywords or "game" in keywords):
+						game("rock paper scissors")
+					"""
 		
 		else:	
 			#sentiment analysis
