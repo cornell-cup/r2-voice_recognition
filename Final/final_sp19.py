@@ -40,13 +40,6 @@ wakeup_final = 998
 sleep_final = 997
 move_final = 996
 attendance_final = 995
-
-sentences = open("sentences.txt","w+")
-
-for i in range(10):
-     sentences.write("This is line %d\r\n" % (i+1))
-
-sentences.close() 
 		
 """
 listen to user statement in mic
@@ -157,8 +150,27 @@ def spit_info():
 
 def write(input):
 	file=open('sentences.txt','a+')
-	file.write(input)
+	file.write(input + "\r\n")
 	file.close()	
+
+def sentiment(input):
+	try:				
+		response = naturalLanguageUnderstanding.analyze(
+		text=input,
+		features=Features(
+		sentiment=SentimentOptions(document=None, targets=None))).get_result()
+
+		parsed_json = json.loads(json.dumps(response, indent=2))
+		sentiment = parsed_json['sentiment']
+		document = sentiment['document']
+		score = document['score']
+		sentiment_value = float(score)
+			
+	except:
+		sentiment_value = sid().polarity_scores(input)['compound']
+			
+	print(sentiment_value)	
+	react_with_sound(sentiment_value)
 
 def main():
 	
@@ -264,11 +276,9 @@ def main():
 		
 		else:	
 			#sentiment analysis
-
-			try:
-					
+			try:				
 				response = naturalLanguageUnderstanding.analyze(
-				text=spoken,
+				text=input,
 				features=Features(
 				sentiment=SentimentOptions(document=None, targets=None))).get_result()
 
@@ -279,10 +289,12 @@ def main():
 				sentiment_value = float(score)
 			
 			except:
-				sentiment_value = sid().polarity_scores(spoken)['compound']
+				sentiment_value = sid().polarity_scores(input)['compound']
 			
 			print(sentiment_value)	
 			react_with_sound(sentiment_value)
+
+		write(spoken)
 
 main()
 
