@@ -278,8 +278,9 @@ def main():
 			#sentiment analysis
 			try:				
 				response = naturalLanguageUnderstanding.analyze(
-					text=input,
-					features=Features(sentiment=SentimentOptions(document=None, targets=None))).get_result()
+				text=spoken,
+				features=Features(
+				sentiment=SentimentOptions(document=None, targets=None))).get_result()
 
 				parsed_json = json.loads(json.dumps(response, indent=2))
 				sentiment = parsed_json['sentiment']
@@ -288,7 +289,7 @@ def main():
 				sentiment_value = float(score)
 			
 			except:
-				sentiment_value = sid().polarity_scores(input)['compound']
+				sentiment_value = sid().polarity_scores(spoken)['compound']
 			
 			print(sentiment_value)	
 			react_with_sound(sentiment_value)
