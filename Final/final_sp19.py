@@ -21,7 +21,6 @@ import json
 #import socket
 #import json
 #import time
-#from threading import Thread
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 \
     import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
@@ -29,6 +28,10 @@ import retinasdk
 #apiKey = "69ba0c10-5e17-11e9-8f72-af685da1b20e"
 apiKey = "f09d0fe0-3223-11e9-bb65-69ed2d3c7927" #FOR DEMO DAY ONLY
 liteClient = retinasdk.LiteClient(apiKey)
+
+import threading
+from threading import Lock, Thread
+lock = Lock()
 
 naturalLanguageUnderstanding = NaturalLanguageUnderstandingV1(
 version='2018-11-16',
@@ -69,8 +72,8 @@ def react_with_sound (sentiment_value):
 	
 	print ("about to play sound...")
 	
-	#lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
-	lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
+	lead_folder = "/home/yanchen-zhan/Documents/Cornell-Cup/r2-voice_recognition/Final/R2FinalSounds/"
+	#lead_folder = "C:\PythonProjects\\r2-voice_recognition\Final\R2FinalSounds\\"
 	sounds = {"confirmation":"R2OK.wav" , "wake up":"R2Awake.wav" , "angry":"R2Angry.wav" , "good":"R2Good.wav" , \
 	"happy":"R2Happy.wav" , "neutral":"R2Neutral.wav" , "sad":"R2Sad.wav" , \
 	"sleep":"R2Sleep.wav", "no clue":"R2Confused.wav" , "move":"R2Move.wav" , \
@@ -154,10 +157,14 @@ def spit_info():
 	print ("info spit")
 	return 4
 	
+#implement threading in here
+#locks implemented to prevent any conflict in data retrieval
 def write(input):
+	lock.acquire()
 	file=open('sentences.txt','a+')
 	file.write(input + "\r\n")
 	file.close()	
+	lock.release()
 
 def sentiment(input):
 	try:				
@@ -231,6 +238,8 @@ def main():
 		#spoken = simplify_text(listen (r, mic))
 		#spoken = spoken.lower()
 		print("The following text was said:\n" + spoken + "\n")
+		
+		t1 = threading.Thread(target = write, args=(spoken,))
 		
 		if ("r2 stop" in spoken):
 			stop()
@@ -308,7 +317,11 @@ def main():
 			print(sentiment_value)	
 			react_with_sound(sentiment_value)
 
-		write(spoken)
+		#write(spoken)
+		t1.start()
+		t1.join()
 
 main()
 
+#multithreading plan: add locks to prevent GUI program from accessing text file data too quickly while the text file is writing
+#create a new thread for this process
