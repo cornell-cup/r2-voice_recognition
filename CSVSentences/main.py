@@ -40,7 +40,7 @@ with open("C:\PythonProjects\\r2-voice_recognition\CSVSentences\sentences.txt", 
         row.append(sentiment_value)
         csvData.append(row)
    
-with open('sentences.csv', 'w', newline='') as csvFile:
+with open('C:\PythonProjects\\r2-voice_recognition\CSVSentences\sentences.csv', 'w', newline='') as csvFile:
     writer = csv.writer(csvFile)
     headers = ["Sentences", "Sentiment Value", "NLTK Prediction", "Watson Prediction"]
     writer.writerow(headers)
