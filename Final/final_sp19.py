@@ -269,6 +269,7 @@ def main():
 			if "wave" in keywords:
 				wave()
 				break
+				
 			else:
 				for x in range(0, len(keywords)):
 						
